@@ -91,8 +91,8 @@ export default async function AboutPage() {
           <div className="relative">
             <div className="relative aspect-[4/3] w-full overflow-hidden rounded-xl border border-gold-400/25 bg-gray-100 shadow-[0_25px_60px_-20px_rgba(0,0,0,0.25)]">
               <Image
-                src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=1400&q=80"
-                alt="Luxury Estates office interior"
+                src="/images/about/office-boardroom.jpg"
+                alt="Luxury Estates boardroom"
                 fill
                 sizes="(min-width: 1024px) 50vw, 100vw"
                 className="object-cover"
@@ -100,8 +100,8 @@ export default async function AboutPage() {
             </div>
             <div className="absolute -bottom-8 -left-6 h-40 w-56 overflow-hidden rounded-xl border-4 border-cream-50 shadow-xl sm:-left-10 sm:h-48 sm:w-64">
               <Image
-                src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=800&q=80"
-                alt="Waterfront property detail"
+                src="/images/about/office-reception.jpg"
+                alt="Luxury Estates reception"
                 fill
                 sizes="256px"
                 className="object-cover"

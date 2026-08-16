@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, FileCheck2, KeyRound, TrendingUp, UserCheck } from "lucide-react";
 import { getAgents } from "@/data/agents";
-import { getProperties } from "@/data/properties";
+import { getPropertiesCount } from "@/data/properties";
 import Reveal from "./Reveal";
 
 const points = [
@@ -33,7 +33,7 @@ const points = [
 ];
 
 export default async function WhyChooseUs() {
-  const [agents, properties] = await Promise.all([getAgents(), getProperties()]);
+  const [agents, propertiesCount] = await Promise.all([getAgents(), getPropertiesCount()]);
   const avgRating = agents.length
     ? agents.reduce((sum, a) => sum + a.rating, 0) / agents.length
     : 0;
@@ -64,7 +64,7 @@ export default async function WhyChooseUs() {
 
           <div className="relative mt-10 min-h-[280px] flex-1 overflow-hidden rounded-2xl">
             <Image
-              src="/images/brand/office-reception.png"
+              src="/images/brand/office-reception.jpg"
               alt="Luxury Estates office reception"
               fill
               sizes="(min-width: 1024px) 40vw, 100vw"
@@ -86,12 +86,12 @@ export default async function WhyChooseUs() {
                 </p>
                 <p className="text-xs text-ink-500">Average client rating</p>
               </div>
-              {properties.length > 0 && (
+              {propertiesCount > 0 && (
                 <>
                   <div className="hidden h-8 w-px bg-ink-900/10 sm:block" />
                   <div className="hidden sm:block">
                     <p className="font-serif text-2xl font-semibold text-ink-900">
-                      {properties.length}+
+                      {propertiesCount}+
                     </p>
                     <p className="text-xs text-ink-500">Active listings</p>
                   </div>

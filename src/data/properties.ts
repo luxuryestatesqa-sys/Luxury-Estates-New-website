@@ -112,6 +112,39 @@ export async function fetchProperties(): Promise<Property[]> {
 }
 export const getProperties = fetchProperties;
 
+async function fetchPropertiesCount(): Promise<number> {
+  const { count, error } = await supabasePublic
+    .from("properties")
+    .select("id", { count: "exact", head: true });
+  if (error) throw error;
+  return count ?? 0;
+}
+export const getPropertiesCount = unstable_cache(fetchPropertiesCount, ["properties:count"], {
+  revalidate: 60,
+  tags: [CACHE_TAGS.properties],
+});
+
+// Targeted, limited query for filling out a short list (e.g. "featured" rails
+// that don't have enough featured rows yet) — avoids pulling the full ~6MB
+// properties table just to grab a handful of extra rows.
+async function fetchFillerProperties(excludeIds: string[], limit: number): Promise<Property[]> {
+  let query = supabasePublic
+    .from("properties")
+    .select(PROPERTY_SELECT)
+    .order("created_at", { ascending: false })
+    .limit(limit);
+  if (excludeIds.length > 0) {
+    query = query.not("id", "in", `(${excludeIds.join(",")})`);
+  }
+  const { data, error } = await query;
+  if (error) throw error;
+  return (data as PropertyRow[] | null ?? []).map(mapProperty);
+}
+export const getFillerProperties = unstable_cache(fetchFillerProperties, ["properties:filler"], {
+  revalidate: 60,
+  tags: [CACHE_TAGS.properties],
+});
+
 async function fetchPropertyBySlug(slug: string): Promise<Property | undefined> {
   const { data, error } = await supabasePublic
     .from("properties")

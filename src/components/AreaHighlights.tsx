@@ -9,7 +9,7 @@ const FEATURED_AREA_PICKS: AreaPick[] = [
     label: "Pearl Qatar",
     area: "The Pearl Island",
     city: "Doha",
-    image: "/images/areas/pearl-qatar.png",
+    image: "/images/areas/pearl-qatar.jpg",
   },
   {
     label: "Qetaifan Island",

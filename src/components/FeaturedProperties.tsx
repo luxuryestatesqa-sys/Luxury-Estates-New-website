@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getFeaturedProperties, getProperties } from "@/data/properties";
+import { getFeaturedProperties, getFillerProperties } from "@/data/properties";
 import PropertyCard from "./PropertyCard";
 import Reveal from "./Reveal";
 
@@ -10,10 +10,9 @@ export default async function FeaturedProperties() {
   let featured = featuredOnly.slice(0, TARGET_COUNT);
 
   if (featured.length < TARGET_COUNT) {
-    const featuredIds = new Set(featured.map((p) => p.id));
-    const all = await getProperties();
-    const fillers = all.filter((p) => !featuredIds.has(p.id));
-    featured = [...featured, ...fillers.slice(0, TARGET_COUNT - featured.length)];
+    const featuredIds = featured.map((p) => p.id);
+    const fillers = await getFillerProperties(featuredIds, TARGET_COUNT - featured.length);
+    featured = [...featured, ...fillers];
   }
 
   return (
