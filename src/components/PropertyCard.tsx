@@ -22,6 +22,7 @@ export default function PropertyCard({
 }) {
   const [saved, setSaved] = useState(false);
   const agent = property.agent;
+  const imageCount = property.imagesCount ?? property.images.length;
 
   return (
     <div
@@ -80,18 +81,18 @@ export default function PropertyCard({
           </svg>
         </button>
 
-        {property.images.length > 1 && (
+        {imageCount > 1 && (
           <>
             <span className="pointer-events-none absolute bottom-3 right-3 flex items-center gap-1.5 rounded-md bg-black/55 px-2.5 py-1.5 text-sm font-medium text-white">
               <svg viewBox="0 0 24 24" className="h-4 w-4 fill-current">
                 <path d="M9 3 7.17 5H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-3.17L15 3H9Zm3 15a5 5 0 1 1 0-10 5 5 0 0 1 0 10Z" />
               </svg>
-              {property.images.length}
+              {imageCount}
             </span>
             <div className="pointer-events-none absolute bottom-3 left-1/2 flex -translate-x-1/2 gap-1">
-              {property.images.slice(0, 5).map((img, i) => (
+              {Array.from({ length: Math.min(imageCount, 5) }).map((_, i) => (
                 <span
-                  key={img}
+                  key={i}
                   className={`h-1.5 w-1.5 rounded-full ${i === 0 ? "bg-white" : "bg-white/60"}`}
                 />
               ))}

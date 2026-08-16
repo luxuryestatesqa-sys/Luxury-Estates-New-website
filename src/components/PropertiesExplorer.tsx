@@ -22,6 +22,14 @@ const HEADER_HEIGHT = 71;
 const TOOLBAR_HEIGHT = 56;
 const STICKY_OFFSET = HEADER_HEIGHT + TOOLBAR_HEIGHT;
 
+// Server-rendering every matching card at once (there can be 500+) is what
+// actually made Buy/Rent slow — each card's <Image> expands into a dozen-plus
+// responsive srcset variants, so hundreds of cards means megabytes of HTML.
+// The map still gets the full filtered set (marker pins are cheap); only the
+// card grid is windowed, with a "Show more" bump instead of true pagination
+// so the map/filter-count behavior doesn't change.
+const CARDS_PAGE_SIZE = 24;
+
 type Category = "" | "residential" | "commercial";
 type SortOption = "newest" | "price-asc" | "price-desc";
 
@@ -74,6 +82,7 @@ export default function PropertiesExplorer({
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [showMap, setShowMap] = useState(true);
+  const [visibleCount, setVisibleCount] = useState(CARDS_PAGE_SIZE);
 
   useEffect(() => {
     const handle = setTimeout(() => {
@@ -148,6 +157,12 @@ export default function PropertiesExplorer({
 
     return result;
   }, [properties, filters, sort]);
+
+  useEffect(() => {
+    setVisibleCount(CARDS_PAGE_SIZE);
+  }, [filtered]);
+
+  const visible = filtered.slice(0, visibleCount);
 
   function updateFilter<K extends keyof Filters>(key: K, value: Filters[K]) {
     setFilters((prev) => ({ ...prev, [key]: value }));
@@ -436,20 +451,34 @@ export default function PropertiesExplorer({
             </div>
 
             {filtered.length > 0 ? (
-              <div
-                className={`mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2 ${
-                  showMap ? "" : "lg:grid-cols-3 xl:grid-cols-4"
-                }`}
-              >
-                {filtered.map((property) => (
-                  <PropertyCard
-                    key={property.id}
-                    property={property}
-                    active={activeId === property.id}
-                    onHover={setActiveId}
-                  />
-                ))}
-              </div>
+              <>
+                <div
+                  className={`mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2 ${
+                    showMap ? "" : "lg:grid-cols-3 xl:grid-cols-4"
+                  }`}
+                >
+                  {visible.map((property) => (
+                    <PropertyCard
+                      key={property.id}
+                      property={property}
+                      active={activeId === property.id}
+                      onHover={setActiveId}
+                    />
+                  ))}
+                </div>
+
+                {visibleCount < filtered.length && (
+                  <div className="mt-8 flex justify-center">
+                    <button
+                      type="button"
+                      onClick={() => setVisibleCount((v) => v + CARDS_PAGE_SIZE)}
+                      className="rounded-full border border-ink-900/15 px-6 py-2.5 text-sm font-semibold text-ink-900 transition hover:border-gold-500 hover:text-gold-700"
+                    >
+                      Show more ({filtered.length - visibleCount} remaining)
+                    </button>
+                  </div>
+                )}
+              </>
             ) : (
               <div className="mt-6 rounded-2xl border border-dashed border-gray-200 py-24 text-center">
                 <p className="font-serif text-xl font-medium text-ink-700">No properties match your search.</p>

@@ -13,6 +13,16 @@ const CACHE_TAGS = { properties: "properties" };
 const AGENT_SELECT = "id,slug,name,title,photo,phone,whatsapp,email";
 const PROPERTY_SELECT = `*, agent:agents(${AGENT_SELECT})`;
 
+// Everything the listings/explorer page's cards, filters and map actually
+// render — cuts every column that page doesn't use (description, amenities,
+// year_built, the pf_agent_* fields, source, external_url) and ships only
+// the cover photo (plus a real imagesCount) instead of the full images
+// array. Needed to get the cached payload under Next's 2MB Data Cache
+// limit — at 6 images/property it landed at ~3MB and silently never cached,
+// so every request re-hit Supabase for the full paginated table.
+const LISTING_SELECT = `id,slug,title,status,type,featured,area,city,price,price_unit,beds,baths,size,lat,lng,images,agent_id,reference,agent:agents(${AGENT_SELECT})`;
+const LISTING_IMAGE_CAP = 1;
+
 interface PropertyRow {
   id: string;
   slug: string;
@@ -111,6 +121,69 @@ export async function fetchProperties(): Promise<Property[]> {
   return rows.map(mapProperty);
 }
 export const getProperties = fetchProperties;
+
+// The listings/explorer page (Buy/Rent) needs every row for its
+// client-side filtering + map, but not every column — using LISTING_SELECT
+// and capping images keeps the serialized payload small enough to actually
+// fit Next's Data Cache, turning every /properties request that used to hit
+// Supabase fresh (via fetchProperties above) into a cache hit instead.
+type ListingRow = Omit<
+  PropertyRow,
+  | "description"
+  | "amenities"
+  | "year_built"
+  | "pf_agent_name"
+  | "pf_agent_photo"
+  | "pf_agent_phone"
+  | "pf_agent_whatsapp"
+  | "pf_agent_email"
+  | "pf_agent_title"
+  | "source"
+  | "external_url"
+>;
+
+async function fetchPropertiesForListing(): Promise<Property[]> {
+  const rows: ListingRow[] = [];
+  let from = 0;
+  for (;;) {
+    const { data, error } = await supabasePublic
+      .from("properties")
+      .select(LISTING_SELECT)
+      .order("created_at", { ascending: false })
+      .range(from, from + PAGE_SIZE - 1);
+    if (error) throw error;
+    const page = (data ?? []) as unknown as ListingRow[];
+    rows.push(...page);
+    if (page.length < PAGE_SIZE) break;
+    from += PAGE_SIZE;
+  }
+  return rows.map((row) => {
+    const images = row.images ?? [];
+    return {
+      ...mapProperty({
+        ...row,
+        description: "",
+        amenities: [],
+        year_built: 0,
+        pf_agent_name: null,
+        pf_agent_photo: null,
+        pf_agent_phone: null,
+        pf_agent_whatsapp: null,
+        pf_agent_email: null,
+        pf_agent_title: null,
+        source: "manual",
+        external_url: null,
+        images: images.slice(0, LISTING_IMAGE_CAP),
+      }),
+      imagesCount: images.length,
+    };
+  });
+}
+export const getPropertiesForListing = unstable_cache(
+  fetchPropertiesForListing,
+  ["properties:listing"],
+  { revalidate: 60, tags: [CACHE_TAGS.properties] },
+);
 
 async function fetchPropertiesCount(): Promise<number> {
   const { count, error } = await supabasePublic

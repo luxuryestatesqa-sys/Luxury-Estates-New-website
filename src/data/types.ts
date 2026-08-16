@@ -60,6 +60,8 @@ export interface Property {
   description: string;
   amenities: string[];
   images: string[];
+  /** True total photo count. Defaults to `images.length` when omitted — only set explicitly when `images` has been trimmed (e.g. the listings page, which ships just the cover photo). */
+  imagesCount?: number;
   agentId: string;
   reference: string;
   agent?: AgentSummary | null;

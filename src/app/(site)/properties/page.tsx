@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { getAreaNames, getProperties } from "@/data/properties";
+import { getAreaNames, getPropertiesForListing } from "@/data/properties";
 import PropertiesExplorer from "@/components/PropertiesExplorer";
 import { SITE_URL } from "@/lib/site";
 
@@ -30,7 +30,7 @@ export default async function PropertiesPage({
   const params = await searchParams;
   const { type, area, city, beds, maxPrice, q } = params;
   const status = params.status === "rent" ? "rent" : "buy";
-  const [properties, areaNames] = await Promise.all([getProperties(), getAreaNames()]);
+  const [properties, areaNames] = await Promise.all([getPropertiesForListing(), getAreaNames()]);
 
   const locationLabel = area || city;
   const statusLabel = status === "buy" ? "Buy" : "Rent";
