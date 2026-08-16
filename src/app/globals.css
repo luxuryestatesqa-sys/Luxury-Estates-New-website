@@ -1,0 +1,183 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+:root {
+  --background: #ffffff;
+  --foreground: #141414;
+
+  --font-cormorant: var(--font-cormorant-garamond), Georgia, "Times New Roman", serif;
+  --font-inter: var(--font-inter), "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  --font-public-sans: var(--font-public-sans), "Segoe UI", Arial, sans-serif;
+
+  /* gold accent */
+  --color-gold-50: #faf6ec;
+  --color-gold-100: #f3e7c9;
+  --color-gold-200: #e6cd94;
+  --color-gold-300: #d9b571;
+  --color-gold-400: #c9a24b;
+  --color-gold-500: #b8923f;
+  --color-gold-600: #96762f;
+  --color-gold-700: #745c26;
+  --color-gold-800: #59461f;
+  --color-gold-900: #47381a;
+
+  /* ink + secondary gray */
+  --color-ink-950: #0a0a0a;
+  --color-ink-900: #141414;
+  --color-ink-800: #1f1f1f;
+  --color-ink-700: #2e2e2e;
+  --color-ink-600: #454545;
+  --color-ink-500: #6b7280;
+  --color-ink-400: #9ca3af;
+
+  /* crisp off-white */
+  --color-cream-50: #fbfbfa;
+  --color-cream-100: #f5f5f2;
+  --color-cream-200: #ebe9e3;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-serif: var(--font-cormorant);
+  --font-sans: var(--font-inter);
+  --font-public-sans: var(--font-public-sans);
+
+  --color-gold-50: var(--color-gold-50);
+  --color-gold-100: var(--color-gold-100);
+  --color-gold-200: var(--color-gold-200);
+  --color-gold-300: var(--color-gold-300);
+  --color-gold-400: var(--color-gold-400);
+  --color-gold-500: var(--color-gold-500);
+  --color-gold-600: var(--color-gold-600);
+  --color-gold-700: var(--color-gold-700);
+  --color-gold-800: var(--color-gold-800);
+  --color-gold-900: var(--color-gold-900);
+
+  --color-ink-950: var(--color-ink-950);
+  --color-ink-900: var(--color-ink-900);
+  --color-ink-800: var(--color-ink-800);
+  --color-ink-700: var(--color-ink-700);
+  --color-ink-600: var(--color-ink-600);
+  --color-ink-500: var(--color-ink-500);
+  --color-ink-400: var(--color-ink-400);
+
+  --color-cream-50: var(--color-cream-50);
+  --color-cream-100: var(--color-cream-100);
+  --color-cream-200: var(--color-cream-200);
+
+  /*
+   * Headline scale (serif, editorial). Fluid via clamp() so a single
+   * class covers every viewport — no more per-page sm:text-4xl vs
+   * sm:text-5xl vs sm:text-[44px] guessing. Pair with font-serif and an
+   * explicit font-weight (500/600/700 — the only weights loaded for
+   * Cormorant Garamond; an unweighted font-serif falls back to a
+   * synthesized 400 and renders inconsistently across browsers).
+   *   h1  — page titles              e.g. "Our Agents", "Contact Us"
+   *   h2  — section headings         e.g. "Featured Properties"
+   *   h3  — card/subsection headings e.g. an amenity group title
+   */
+  --text-h1: clamp(1.875rem, 1.65rem + 1vw, 2.5rem); /* 30px → 40px */
+  --text-h1--line-height: 1.15;
+  --text-h2: clamp(1.625rem, 1.45rem + 0.8vw, 2.25rem); /* 26px → 36px */
+  --text-h2--line-height: 1.2;
+  --text-h3: clamp(1.25rem, 1.15rem + 0.4vw, 1.5rem); /* 20px → 24px */
+  --text-h3--line-height: 1.3;
+
+  /*
+   * Eyebrow — the small uppercase kicker above section headings
+   * ("CURATED SELECTION", "RESERVE TOMORROW'S ADDRESS"). Use with
+   * uppercase font-semibold tracking-eyebrow text-gold-600 (or
+   * text-gold-300 on dark backgrounds).
+   */
+  --text-eyebrow: 0.6875rem; /* 11px */
+  --text-eyebrow--line-height: 1.4;
+  --tracking-eyebrow: 0.3em;
+
+  /*
+   * Body copy: no new tokens needed — Tailwind's stock scale already
+   * covers this range cleanly. Standardize on these four roles instead
+   * of ad hoc text-[13px]/text-[15px]/text-[17px] values:
+   *   text-xs   (12px) — captions, meta text, timestamps
+   *   text-sm   (14px) — secondary body copy, form labels, card meta
+   *   text-base (16px) — default paragraph copy
+   *   text-lg   (18px) — lead paragraphs, intro copy under a hero H1
+   */
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-inter);
+}
+
+.font-serif {
+  font-family: var(--font-cormorant);
+}
+
+::selection {
+  background: var(--color-gold-400);
+  color: var(--color-ink-950);
+}
+
+.gold-underline {
+  position: relative;
+}
+.gold-underline::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -0.5rem;
+  height: 2px;
+  width: 3rem;
+  background: linear-gradient(90deg, var(--color-gold-400), transparent);
+}
+
+.text-gradient-gold {
+  background: linear-gradient(90deg, #f3e7c9, #c9a24b 45%, #96762f 90%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-fade-up {
+  animation: fade-up 0.7s ease both;
+}
+
+@keyframes hero-zoom {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.06);
+  }
+}
+.animate-hero-zoom {
+  animation: hero-zoom 20s ease-out forwards;
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+.animate-marquee {
+  animation: marquee 28s linear infinite;
+}

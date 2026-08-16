@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl -s http://localhost:3000/)",
+      "Bash(npx --yes supabase functions deploy sync-property-finder --project-ref eskrxutnidutmflfxfnt)"
+    ]
+  }
+}
