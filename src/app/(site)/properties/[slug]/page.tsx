@@ -128,7 +128,7 @@ export default async function PropertyDetailPage({
 
           <div className="mt-8">
             <h2 className="font-serif text-xl font-semibold text-ink-900">About this property</h2>
-            <p className="mt-3 text-sm leading-relaxed text-gray-600">{property.description}</p>
+            <p className="mt-3 whitespace-pre-line text-sm leading-relaxed text-gray-600">{property.description}</p>
           </div>
 
           <div className="mt-8">

@@ -50,7 +50,7 @@ export default async function EditPropertyPage({
                 {formatPrice(Number(property.price), property.price_unit)}
               </p>
               <p className="text-sm text-gray-500">{formatLocation(property.area, property.city)}</p>
-              <p className="text-sm leading-relaxed text-gray-600">{property.description}</p>
+              <p className="whitespace-pre-line text-sm leading-relaxed text-gray-600">{property.description}</p>
             </div>
           </Card>
 
