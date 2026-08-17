@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { usePathname } from "next/navigation";
 import { Mail, Phone, Plus } from "lucide-react";
 
 const COMPANY_PHONE = "+97471157307";
@@ -9,6 +10,10 @@ const COMPANY_EMAIL = "info@luxuryestates.qa";
 export default function WhatsAppButton() {
   const [expanded, setExpanded] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const pathname = usePathname();
+  // Off-plan project pages have their own mobile sticky CTA bar along the
+  // bottom edge — lift this above it there so the two don't overlap.
+  const hasStickyBarBelow = /^\/off-plan\/[^/]+/.test(pathname ?? "");
 
   useEffect(() => {
     if (!expanded) return;
@@ -22,7 +27,12 @@ export default function WhatsAppButton() {
   }, [expanded]);
 
   return (
-    <div ref={containerRef} className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3">
+    <div
+      ref={containerRef}
+      className={`fixed right-6 z-50 flex flex-col items-end gap-3 transition-[bottom] ${
+        hasStickyBarBelow ? "bottom-24 lg:bottom-6" : "bottom-6"
+      }`}
+    >
       {expanded && (
         <div className="flex flex-col items-end gap-2.5">
           <a

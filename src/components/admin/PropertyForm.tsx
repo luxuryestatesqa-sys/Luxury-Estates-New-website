@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import ImageListField from "./ImageListField";
+import MapLinkField from "./MapLinkField";
 import { Card, FormSection } from "./ui";
 
 const PROPERTY_TYPES = ["Apartment", "Villa", "Penthouse", "Townhouse", "Office", "Land"];
@@ -185,6 +186,12 @@ export default function PropertyForm({
         </FormSection>
 
         <FormSection title="Location" description="Used to place the pin on the map.">
+          <MapLinkField
+            onResolved={(lat, lng) => {
+              set("lat", lat);
+              set("lng", lng);
+            }}
+          />
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <Field label="Latitude">
               <input type="number" step="any" value={values.lat ?? ""} onChange={(e) => set("lat", e.target.value ? Number(e.target.value) : null)} className={inputClass} />

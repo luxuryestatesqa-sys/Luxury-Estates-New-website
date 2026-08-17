@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import ImageListField from "./ImageListField";
 import FileField from "./FileField";
+import MapLinkField from "./MapLinkField";
 import { Card, FormSection } from "./ui";
 
 const STATUSES = ["Pre-Launch", "Off-Plan", "Under Construction", "Nearing Completion"];
@@ -182,6 +183,12 @@ export default function OffPlanForm({
         </FormSection>
 
         <FormSection title="Location" description="Used to place the pin on the map.">
+          <MapLinkField
+            onResolved={(lat, lng) => {
+              set("lat", lat);
+              set("lng", lng);
+            }}
+          />
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <Field label="Latitude">
               <input type="number" step="any" value={values.lat ?? ""} onChange={(e) => set("lat", e.target.value ? Number(e.target.value) : null)} className={inputClass} />

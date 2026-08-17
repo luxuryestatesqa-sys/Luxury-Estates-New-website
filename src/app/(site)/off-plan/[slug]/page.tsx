@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { Award, CalendarClock, Home, Ruler, ShieldCheck } from "lucide-react";
 import { getOffPlanProjectBySlug, getOffPlanProjects } from "@/data/offplan";
 import { formatLocation, formatNumber, formatPrice } from "@/lib/format";
 import PropertyGallery from "@/components/PropertyGallery";
@@ -11,6 +13,9 @@ import ProjectLocationMap from "@/components/ProjectLocationMap";
 import JsonLd, { breadcrumbJsonLd } from "@/components/JsonLd";
 import { SITE_URL } from "@/lib/site";
 import type { OffPlanProject } from "@/data/types";
+
+const COMPANY_PHONE = "+97471157307";
+const COMPANY_WHATSAPP = "97471157307";
 
 function offPlanJsonLd(project: OffPlanProject) {
   const url = `${SITE_URL}/off-plan/${project.slug}`;
@@ -69,8 +74,11 @@ export default async function OffPlanDetailPage({
     ? related
     : allProjects.filter((p) => p.id !== project.id).slice(0, 3);
 
+  const waText = `Hi, I'm interested in ${project.name} (Ref ${project.reference}). Please send me the payment plan.`;
+  const waUrl = `https://wa.me/${COMPANY_WHATSAPP}?text=${encodeURIComponent(waText)}`;
+
   return (
-    <div className="mx-auto max-w-7xl px-5 py-12 lg:px-8">
+    <div className="pb-24 lg:pb-12">
       <JsonLd data={offPlanJsonLd(project)} />
       <JsonLd
         data={breadcrumbJsonLd([
@@ -80,52 +88,94 @@ export default async function OffPlanDetailPage({
         ])}
       />
 
-      <nav className="mb-6 text-sm text-gray-400">
-        <Link href="/" className="hover:text-gold-600">
-          Home
-        </Link>
-        <span className="mx-2">/</span>
-        <Link href="/off-plan" className="hover:text-gold-600">
-          Off-Plan Projects
-        </Link>
-        <span className="mx-2">/</span>
-        <span className="text-ink-600">{project.name}</span>
-      </nav>
+      {/* Full-bleed hero — the page's first impression for ad traffic landing directly here. */}
+      <section className="relative flex min-h-[440px] items-end overflow-hidden bg-ink-950 sm:min-h-[520px]">
+        {project.images[0] && (
+          <Image
+            src={project.images[0]}
+            alt={project.name}
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover"
+          />
+        )}
+        <div className="absolute inset-0 bg-gradient-to-t from-ink-950 via-ink-950/55 to-ink-950/20" />
 
-      <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
-        <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-gold-600">
-            {formatLocation(project.area, project.city)} &middot; by {project.developer}
-          </p>
-          <h1 className="mt-2 font-serif text-h1 font-semibold text-ink-900">
+        <div className="relative z-10 mx-auto w-full max-w-7xl px-5 pb-8 pt-24 lg:px-8">
+          <span className="inline-flex items-center rounded-full border border-gold-400/50 bg-black/30 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-gold-300 backdrop-blur-sm">
+            {project.status}
+          </span>
+          <h1 className="mt-4 max-w-2xl font-serif text-h1 font-semibold italic leading-[1.1] text-white drop-shadow-[0_2px_20px_rgba(0,0,0,0.45)]">
             {project.name}
           </h1>
-        </div>
-        <div className="text-left sm:text-right">
-          <p className="font-serif text-2xl font-semibold text-ink-900">
-            {project.startingPrice > 0
-              ? `From ${formatPrice(project.startingPrice, "total")}`
-              : "Price on Request"}
+          <p className="mt-2 text-sm font-medium uppercase tracking-[0.15em] text-white/80">
+            {formatLocation(project.area, project.city)} &middot; by {project.developer}
           </p>
-          <p className="text-xs text-gray-400">Ref {project.reference}</p>
+
+          <div className="mt-6 flex flex-wrap items-center gap-3">
+            <p className="font-serif text-2xl font-semibold text-white">
+              {project.startingPrice > 0
+                ? `From ${formatPrice(project.startingPrice, "total")}`
+                : "Price on Request"}
+            </p>
+            <a
+              href="#enquire"
+              className="rounded-full bg-gold-500 px-6 py-3 text-sm font-semibold text-ink-950 transition hover:bg-white"
+            >
+              Get Payment Plan & Brochure
+            </a>
+            <a
+              href={waUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="rounded-full border border-white/40 px-6 py-3 text-sm font-semibold text-white transition hover:border-white hover:bg-white/10"
+            >
+              Ask on WhatsApp
+            </a>
+          </div>
+
+          <p className="mt-4 flex items-center gap-1.5 text-xs font-medium text-white/70">
+            <ShieldCheck className="h-3.5 w-3.5 text-gold-300" strokeWidth={2} />
+            RERA-compliant off-plan sale &middot; Escrow-protected payment plan
+          </p>
+        </div>
+      </section>
+
+      {/* Quick-facts strip — scannable at-a-glance summary for visitors who won't read the full page. */}
+      <div className="border-b border-gray-100 bg-white shadow-sm">
+        <div className="mx-auto grid max-w-7xl grid-cols-2 gap-6 px-5 py-6 sm:grid-cols-4 lg:px-8">
+          <QuickFact icon={CalendarClock} label="Handover" value={project.handover || "TBA"} />
+          <QuickFact
+            icon={Ruler}
+            label="Unit Sizes"
+            value={
+              project.minSize > 0 || project.maxSize > 0
+                ? `${formatNumber(project.minSize)}–${formatNumber(project.maxSize)} sqm`
+                : "On request"
+            }
+          />
+          <QuickFact icon={Home} label="Unit Types" value={project.unitTypes[0] ?? "Multiple"} />
+          <QuickFact icon={Award} label="Developer" value={project.developer} />
         </div>
       </div>
 
-      <div className="mt-8 grid grid-cols-1 gap-12 lg:grid-cols-[1.6fr_1fr]">
+      <div className="mx-auto max-w-7xl px-5 pt-12 lg:px-8">
+        <nav className="mb-6 text-sm text-gray-400">
+          <Link href="/" className="hover:text-gold-600">
+            Home
+          </Link>
+          <span className="mx-2">/</span>
+          <Link href="/off-plan" className="hover:text-gold-600">
+            Off-Plan Projects
+          </Link>
+          <span className="mx-2">/</span>
+          <span className="text-ink-600">{project.name}</span>
+        </nav>
+
+      <div className="grid grid-cols-1 gap-12 lg:grid-cols-[1.6fr_1fr]">
         <div>
           <PropertyGallery images={project.images} title={project.name} />
-
-          <div className="mt-8 grid grid-cols-2 gap-4 border-y border-gray-100 py-6 sm:grid-cols-4">
-            <Stat label="Status" value={project.status} />
-            {project.handover && <Stat label="Handover" value={project.handover} />}
-            {(project.minSize > 0 || project.maxSize > 0) && (
-              <Stat
-                label="Unit Sizes"
-                value={`${formatNumber(project.minSize)}–${formatNumber(project.maxSize)} sqm`}
-              />
-            )}
-            <Stat label="Developer" value={project.developer} />
-          </div>
 
           <div className="mt-8">
             <h2 className="font-serif text-xl font-semibold text-ink-900">About this project</h2>
@@ -173,7 +223,7 @@ export default async function OffPlanDetailPage({
           )}
         </div>
 
-        <aside className="space-y-6">
+        <aside id="enquire" className="scroll-mt-24 space-y-6">
           <ProjectLocationMap
             name={project.name}
             area={project.area}
@@ -230,15 +280,59 @@ export default async function OffPlanDetailPage({
           </div>
         </div>
       )}
+      </div>
+
+      {/* Sticky mobile CTA — ad traffic is mostly mobile, so a conversion path stays on-screen at all times. */}
+      <div className="fixed inset-x-0 bottom-0 z-40 flex items-stretch gap-2 border-t border-gray-100 bg-white/95 p-3 shadow-[0_-4px_20px_rgba(0,0,0,0.08)] backdrop-blur-sm lg:hidden">
+        <a
+          href={`tel:${COMPANY_PHONE}`}
+          aria-label="Call us"
+          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-gray-200 text-ink-900"
+        >
+          <svg viewBox="0 0 24 24" className="h-4 w-4 fill-current">
+            <path d="M6.6 10.8c1.2 2.4 3.2 4.4 5.6 5.6l1.9-1.9c.3-.3.7-.4 1-.2 1 .3 2.1.5 3.2.5.6 0 1 .4 1 1V19c0 .6-.4 1-1 1-9 0-16-7-16-16 0-.6.4-1 1-1h3.2c.6 0 1 .4 1 1 0 1.1.2 2.2.5 3.2.1.3 0 .7-.2 1L6.6 10.8Z" />
+          </svg>
+        </a>
+        <a
+          href={waUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="WhatsApp us"
+          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-gray-200 text-ink-900"
+        >
+          <svg viewBox="0 0 32 32" className="h-4 w-4 fill-current">
+            <path d="M16.004 3C9.376 3 4 8.373 4 15c0 2.31.65 4.47 1.78 6.31L4 29l7.86-1.74A11.94 11.94 0 0 0 16.004 27C22.63 27 28 21.627 28 15S22.63 3 16.004 3Zm0 21.6c-1.98 0-3.83-.55-5.4-1.5l-.39-.23-4.66 1.03 1.05-4.54-.25-.4A9.55 9.55 0 0 1 6.4 15c0-5.3 4.31-9.6 9.6-9.6 5.3 0 9.6 4.3 9.6 9.6 0 5.3-4.3 9.6-9.6 9.6Zm5.3-7.19c-.29-.15-1.7-.84-1.96-.94-.26-.1-.46-.15-.65.15-.19.29-.75.94-.92 1.13-.17.19-.34.22-.63.07-.29-.15-1.22-.45-2.32-1.43-.86-.77-1.44-1.71-1.61-2-.17-.29-.02-.45.13-.59.13-.13.29-.34.44-.51.15-.17.19-.29.29-.48.1-.19.05-.36-.02-.51-.07-.15-.65-1.57-.89-2.15-.23-.56-.47-.48-.65-.49-.17-.01-.36-.01-.55-.01-.19 0-.51.07-.78.36-.26.29-1.02 1-1.02 2.44 0 1.44 1.05 2.83 1.19 3.03.15.19 2.07 3.16 5.02 4.43.7.3 1.25.48 1.68.61.7.22 1.34.19 1.84.11.56-.08 1.7-.7 1.94-1.36.24-.67.24-1.24.17-1.36-.07-.12-.26-.19-.55-.34Z" />
+          </svg>
+        </a>
+        <a
+          href="#enquire"
+          className="flex flex-1 items-center justify-center rounded-full bg-gold-500 text-sm font-semibold text-ink-950"
+        >
+          Get Payment Plan
+        </a>
+      </div>
     </div>
   );
 }
 
-function Stat({ label, value }: { label: string; value: string }) {
+function QuickFact({
+  icon: Icon,
+  label,
+  value,
+}: {
+  icon: typeof CalendarClock;
+  label: string;
+  value: string;
+}) {
   return (
-    <div>
-      <p className="text-xs uppercase tracking-wide text-gray-400">{label}</p>
-      <p className="mt-1 font-serif text-base font-semibold text-ink-900">{value}</p>
+    <div className="flex items-center gap-3">
+      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-cream-100 text-gold-600">
+        <Icon className="h-4 w-4" strokeWidth={1.8} />
+      </span>
+      <div className="min-w-0">
+        <p className="text-xs uppercase tracking-wide text-gray-400">{label}</p>
+        <p className="truncate font-serif text-sm font-semibold text-ink-900">{value}</p>
+      </div>
     </div>
   );
 }

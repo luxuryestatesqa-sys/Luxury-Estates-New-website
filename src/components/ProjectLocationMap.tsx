@@ -12,7 +12,20 @@ const mapOptions: google.maps.MapOptions = {
   zoomControl: true,
   gestureHandling: "greedy",
   clickableIcons: false,
-  mapTypeId: "hybrid",
+  // "hybrid"/satellite tiles come back blank (200 OK, ~40-byte empty
+  // image) on this account — satellite imagery needs a billing tier this
+  // key doesn't have enabled. Roadmap tiles work fine, so match the
+  // styling already used on the properties map instead of satellite.
+  styles: [
+    { elementType: "geometry", stylers: [{ color: "#f5f2ea" }] },
+    { elementType: "labels.text.fill", stylers: [{ color: "#4a4131" }] },
+    { elementType: "labels.text.stroke", stylers: [{ color: "#fdfcf9" }] },
+    { featureType: "water", elementType: "geometry", stylers: [{ color: "#8ecae6" }] },
+    { featureType: "poi", elementType: "labels", stylers: [{ visibility: "off" }] },
+    { featureType: "road", elementType: "geometry", stylers: [{ color: "#ffffff" }] },
+    { featureType: "road.arterial", elementType: "geometry", stylers: [{ color: "#f0e9d8" }] },
+    { featureType: "administrative", elementType: "geometry", stylers: [{ color: "#d9cfa8" }] },
+  ],
 };
 
 interface ProjectLocationMapProps {
@@ -30,10 +43,23 @@ export default function ProjectLocationMap({ name, area, city, lat, lng }: Proje
   });
 
   const position = { lat, lng };
+  // (0, 0) is the "not geocoded" sentinel this data layer defaults to —
+  // it's technically real coordinates (open ocean off West Africa), so
+  // showing it as a pin would be actively misleading rather than empty.
+  const hasLocation = !(lat === 0 && lng === 0);
+
+  if (!hasLocation) {
+    return (
+      <div className="flex h-64 flex-col items-center justify-center rounded-xl border border-dashed border-ink-900/20 bg-cream-100 p-6 text-center">
+        <p className="font-serif text-base font-semibold text-ink-800">Location coming soon</p>
+        <p className="mt-2 text-xs text-ink-500">{formatLocation(area, city)}</p>
+      </div>
+    );
+  }
 
   if (!GOOGLE_MAPS_API_KEY) {
     return (
-      <div className="flex h-full min-h-[280px] flex-col items-center justify-center rounded-xl border border-dashed border-ink-900/20 bg-cream-100 p-6 text-center">
+      <div className="flex h-64 flex-col items-center justify-center rounded-xl border border-dashed border-ink-900/20 bg-cream-100 p-6 text-center">
         <p className="font-serif text-base font-semibold text-ink-800">
           Map view needs a Google Maps API key
         </p>
@@ -47,7 +73,7 @@ export default function ProjectLocationMap({ name, area, city, lat, lng }: Proje
 
   if (loadError) {
     return (
-      <div className="flex h-full min-h-[280px] items-center justify-center rounded-xl border border-dashed border-red-300 bg-red-50 p-6 text-center text-sm text-red-700">
+      <div className="flex h-64 items-center justify-center rounded-xl border border-dashed border-red-300 bg-red-50 p-6 text-center text-sm text-red-700">
         Failed to load the map. Check that the Maps JavaScript API is enabled for your key.
       </div>
     );
@@ -55,7 +81,7 @@ export default function ProjectLocationMap({ name, area, city, lat, lng }: Proje
 
   if (!isLoaded) {
     return (
-      <div className="flex h-full min-h-[280px] items-center justify-center rounded-xl bg-cream-100">
+      <div className="flex h-64 items-center justify-center rounded-xl bg-cream-100">
         <p className="text-sm text-ink-400">Loading map&hellip;</p>
       </div>
     );
