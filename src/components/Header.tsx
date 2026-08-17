@@ -2,8 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Suspense, useEffect, useState } from "react";
-import { usePathname, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import { ChevronDown, Menu, X } from "lucide-react";
 import { socials } from "@/lib/socials";
 
@@ -48,19 +48,29 @@ function StatusDropdown({ status, label, href }: { status: "buy" | "rent"; label
   );
 }
 
-/** Reads the URL's ?status= param so only the currently selected Buy/Rent tab is highlighted. */
+/**
+ * Highlights whichever of Buy/Rent matches the current ?status= — tracked
+ * without useSearchParams(), which forces this part of the header onto a
+ * separate dynamic render path (Suspense + a runtime API) under this
+ * Next.js version's Cache Components model. That split let the static
+ * shell freeze the *other* nav links with stale build-time styling while
+ * this piece re-rendered fresh per request, so the two visibly diverged
+ * (white vs dark) on production despite matching perfectly in dev.
+ * `activeStatus` is set optimistically on click and re-synced from the
+ * real URL on mount/navigation instead, keeping the whole nav on one
+ * consistent render path.
+ */
 function StatusNavItem({
   link,
   transparent,
-  pathname,
+  isActive,
+  onNavigate,
 }: {
   link: { href: string; label: string; status: "buy" | "rent" };
   transparent: boolean;
-  pathname: string;
+  isActive: boolean;
+  onNavigate: (status: "buy" | "rent") => void;
 }) {
-  const searchParams = useSearchParams();
-  const isActive =
-    pathname === "/properties" && (searchParams.get("status") === "rent" ? "rent" : "buy") === link.status;
   const [hovered, setHovered] = useState(false);
 
   return (
@@ -69,7 +79,11 @@ function StatusNavItem({
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
-      <Link href={link.href} className={statusLinkClass(isActive, transparent)}>
+      <Link
+        href={link.href}
+        onClick={() => onNavigate(link.status)}
+        className={statusLinkClass(isActive, transparent)}
+      >
         {link.label}
         <ChevronDown className="h-3.5 w-3.5" strokeWidth={1.8} />
       </Link>
@@ -78,26 +92,10 @@ function StatusNavItem({
   );
 }
 
-function StatusNavItemFallback({
-  link,
-  transparent,
-}: {
-  link: { href: string; label: string; status: "buy" | "rent" };
-  transparent: boolean;
-}) {
-  return (
-    <div className="relative">
-      <Link href={link.href} className={statusLinkClass(false, transparent)}>
-        {link.label}
-        <ChevronDown className="h-3.5 w-3.5" strokeWidth={1.8} />
-      </Link>
-    </div>
-  );
-}
-
 export default function Header() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [activeStatus, setActiveStatus] = useState<"buy" | "rent" | null>(null);
   const pathname = usePathname();
 
   const isHome = pathname === "/";
@@ -110,6 +108,17 @@ export default function Header() {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, [isHome]);
+
+  useEffect(() => {
+    const syncActiveStatus = () => {
+      if (pathname !== "/properties") {
+        setActiveStatus(null);
+        return;
+      }
+      setActiveStatus(new URLSearchParams(window.location.search).get("status") === "rent" ? "rent" : "buy");
+    };
+    syncActiveStatus();
+  }, [pathname]);
 
   useEffect(() => {
     if (!open) return;
@@ -151,12 +160,13 @@ export default function Header() {
         <nav className="hidden items-center justify-self-center gap-7 lg:flex">
           {navLinks.map((link) =>
             link.status ? (
-              <Suspense
+              <StatusNavItem
                 key={link.label}
-                fallback={<StatusNavItemFallback link={{ ...link, status: link.status }} transparent={transparent} />}
-              >
-                <StatusNavItem link={{ ...link, status: link.status }} transparent={transparent} pathname={pathname} />
-              </Suspense>
+                link={{ ...link, status: link.status }}
+                transparent={transparent}
+                isActive={activeStatus === link.status}
+                onNavigate={setActiveStatus}
+              />
             ) : (
               <Link
                 key={link.label}
