@@ -110,7 +110,6 @@ export default function PropertyGallery({
                 fill
                 sizes="200px"
                 className="object-cover"
-                quality={60}
                 placeholder="blur"
                 blurDataURL={shimmerBlurDataURL(200, 150)}
               />
