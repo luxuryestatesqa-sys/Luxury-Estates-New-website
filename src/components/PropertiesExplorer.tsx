@@ -48,7 +48,7 @@ interface Filters {
 function matchesBeds(bedsFilter: string, propertyBeds: number): boolean {
   if (!bedsFilter) return true;
   if (bedsFilter === "studio") return propertyBeds === 0;
-  return propertyBeds >= Number(bedsFilter);
+  return propertyBeds === Number(bedsFilter);
 }
 
 const DEFAULT_FILTERS: Omit<Filters, "category"> = {
@@ -362,9 +362,9 @@ export default function PropertiesExplorer({
               >
                 <option value="">Beds</option>
                 <option value="studio">Studio</option>
-                {[1, 2, 3, 4, 5, 6].map((n) => (
+                {[1, 2, 3, 4, 5, 6, 7].map((n) => (
                   <option key={n} value={n}>
-                    {n}+ Beds
+                    {n} Bedroom{n > 1 ? "s" : ""}
                   </option>
                 ))}
               </select>
@@ -440,9 +440,9 @@ export default function PropertiesExplorer({
                     >
                       <option value="">Any</option>
                       <option value="studio">Studio</option>
-                      {[1, 2, 3, 4, 5, 6].map((n) => (
+                      {[1, 2, 3, 4, 5, 6, 7].map((n) => (
                         <option key={n} value={n}>
-                          {n}+ Beds
+                          {n} Bedroom{n > 1 ? "s" : ""}
                         </option>
                       ))}
                     </select>

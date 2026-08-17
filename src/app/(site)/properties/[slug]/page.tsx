@@ -8,6 +8,7 @@ import InquiryForm from "@/components/InquiryForm";
 import PropertyCard from "@/components/PropertyCard";
 import TrustBadges from "@/components/TrustBadges";
 import PropertyAgentCard from "@/components/PropertyAgentCard";
+import ProjectLocationMap from "@/components/ProjectLocationMap";
 import JsonLd, { breadcrumbJsonLd } from "@/components/JsonLd";
 import { SITE_URL } from "@/lib/site";
 import type { Property } from "@/data/types";
@@ -144,6 +145,14 @@ export default async function PropertyDetailPage({
         </div>
 
         <aside className="space-y-6">
+          <ProjectLocationMap
+            name={property.title}
+            area={property.area}
+            city={property.city}
+            lat={property.lat}
+            lng={property.lng}
+          />
+
           {agent ? (
             <PropertyAgentCard
               photo={agent.photo}
