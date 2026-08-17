@@ -20,6 +20,41 @@ const organizationJsonLd = {
   areaServed: "Doha, Qatar",
 };
 
+// Tells Google this site has real internal search, which is what the
+// "sitelinks search box" feature is keyed off. There's no schema or
+// submission that makes Google choose specific sitelinks (Buy, Off-Plan,
+// etc.) directly — those are decided by its own algorithm as a site
+// earns enough branded search volume — but this is the one piece of
+// markup Google explicitly documents as feeding into that surface.
+const websiteJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "Luxury Estates",
+  url: SITE_URL,
+  potentialAction: {
+    "@type": "SearchAction",
+    target: {
+      "@type": "EntryPoint",
+      urlTemplate: `${SITE_URL}/properties?q={search_term_string}`,
+    },
+    "query-input": "required name=search_term_string",
+  },
+};
+
+// A secondary, weaker hint some crawlers use to identify a site's main
+// sections — reinforces the same nav Header.tsx renders, kept in sync
+// with it manually since this is server-only metadata.
+const siteNavigationJsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "SiteNavigationElement", name: "Buy / Rent", url: `${SITE_URL}/properties` },
+    { "@type": "SiteNavigationElement", name: "Off-Plan", url: `${SITE_URL}/off-plan` },
+    { "@type": "SiteNavigationElement", name: "Agents", url: `${SITE_URL}/agents` },
+    { "@type": "SiteNavigationElement", name: "About", url: `${SITE_URL}/about` },
+    { "@type": "SiteNavigationElement", name: "Contact", url: `${SITE_URL}/contact` },
+  ],
+};
+
 const cormorantGaramond = Cormorant_Garamond({
   subsets: ["latin"],
   weight: ["500", "600", "700"],
@@ -75,6 +110,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="min-h-full flex flex-col bg-cream-50 text-ink-900">
         <JsonLd data={organizationJsonLd} />
+        <JsonLd data={websiteJsonLd} />
+        <JsonLd data={siteNavigationJsonLd} />
         {children}
       </body>
     </html>
