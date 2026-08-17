@@ -4,98 +4,20 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
-import { ChevronDown, Menu, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { socials } from "@/lib/socials";
 
-const PROPERTY_TYPES = ["Apartment", "Villa", "Penthouse", "Townhouse", "Office", "Land"];
-
 const navLinks = [
-  { href: "/properties?status=buy", label: "Buy", status: "buy" as const },
-  { href: "/properties?status=rent", label: "Rent", status: "rent" as const },
+  { href: "/properties", label: "Buy / Rent" },
   { href: "/off-plan", label: "Off-Plan" },
   { href: "/agents", label: "Agents" },
   { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" },
 ];
 
-function statusLinkClass(active: boolean, transparent: boolean) {
-  return `flex items-center gap-1 text-sm font-semibold uppercase tracking-[0.08em] transition hover:text-gold-500 ${
-    active ? "text-gold-500" : transparent ? "text-white/90 hover:text-white" : "text-ink-700"
-  }`;
-}
-
-function StatusDropdown({ status, label, href }: { status: "buy" | "rent"; label: string; href: string }) {
-  return (
-    <div className="absolute left-1/2 top-full w-48 -translate-x-1/2 pt-3">
-      <div className="overflow-hidden rounded-xl border border-gray-100 bg-white py-2 shadow-xl">
-        {PROPERTY_TYPES.map((type) => (
-          <Link
-            key={type}
-            href={`/properties?status=${status}&type=${type}`}
-            className="block px-4 py-2 text-sm text-ink-700 hover:bg-gray-50 hover:text-gold-600"
-          >
-            {type}
-          </Link>
-        ))}
-        <Link
-          href={href}
-          className="mt-1 block border-t border-gray-100 px-4 py-2 text-sm font-semibold text-ink-900 hover:text-gold-600"
-        >
-          All {label} Properties
-        </Link>
-      </div>
-    </div>
-  );
-}
-
-/**
- * Highlights whichever of Buy/Rent matches the current ?status= — tracked
- * without useSearchParams(), which forces this part of the header onto a
- * separate dynamic render path (Suspense + a runtime API) under this
- * Next.js version's Cache Components model. That split let the static
- * shell freeze the *other* nav links with stale build-time styling while
- * this piece re-rendered fresh per request, so the two visibly diverged
- * (white vs dark) on production despite matching perfectly in dev.
- * `activeStatus` is set optimistically on click and re-synced from the
- * real URL on mount/navigation instead, keeping the whole nav on one
- * consistent render path.
- */
-function StatusNavItem({
-  link,
-  transparent,
-  isActive,
-  onNavigate,
-}: {
-  link: { href: string; label: string; status: "buy" | "rent" };
-  transparent: boolean;
-  isActive: boolean;
-  onNavigate: (status: "buy" | "rent") => void;
-}) {
-  const [hovered, setHovered] = useState(false);
-
-  return (
-    <div
-      className="relative"
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-    >
-      <Link
-        href={link.href}
-        onClick={() => onNavigate(link.status)}
-        className={statusLinkClass(isActive, transparent)}
-      >
-        {link.label}
-        <ChevronDown className="h-3.5 w-3.5" strokeWidth={1.8} />
-      </Link>
-      {hovered && <StatusDropdown status={link.status} label={link.label} href={link.href} />}
-    </div>
-  );
-}
-
 export default function Header() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [activeStatus, setActiveStatus] = useState<"buy" | "rent" | null>(null);
   const pathname = usePathname();
 
   const isHome = pathname === "/";
@@ -108,17 +30,6 @@ export default function Header() {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, [isHome]);
-
-  useEffect(() => {
-    const syncActiveStatus = () => {
-      if (pathname !== "/properties") {
-        setActiveStatus(null);
-        return;
-      }
-      setActiveStatus(new URLSearchParams(window.location.search).get("status") === "rent" ? "rent" : "buy");
-    };
-    syncActiveStatus();
-  }, [pathname]);
 
   useEffect(() => {
     if (!open) return;
@@ -158,31 +69,21 @@ export default function Header() {
         </Link>
 
         <nav className="hidden items-center justify-self-center gap-7 lg:flex">
-          {navLinks.map((link) =>
-            link.status ? (
-              <StatusNavItem
-                key={link.label}
-                link={{ ...link, status: link.status }}
-                transparent={transparent}
-                isActive={activeStatus === link.status}
-                onNavigate={setActiveStatus}
-              />
-            ) : (
-              <Link
-                key={link.label}
-                href={link.href}
-                className={`text-sm font-semibold uppercase tracking-[0.08em] transition hover:text-gold-500 ${
-                  pathname === link.href.split("?")[0]
-                    ? "text-gold-500"
-                    : transparent
-                      ? "text-white/90 hover:text-white"
-                      : "text-ink-700"
-                }`}
-              >
-                {link.label}
-              </Link>
-            ),
-          )}
+          {navLinks.map((link) => (
+            <Link
+              key={link.label}
+              href={link.href}
+              className={`text-sm font-semibold uppercase tracking-[0.08em] transition hover:text-gold-500 ${
+                pathname === link.href
+                  ? "text-gold-500"
+                  : transparent
+                    ? "text-white/90 hover:text-white"
+                    : "text-ink-700"
+              }`}
+            >
+              {link.label}
+            </Link>
+          ))}
         </nav>
 
         <div className="flex items-center justify-self-end gap-4">

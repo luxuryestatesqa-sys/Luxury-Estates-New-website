@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import Link from "next/link";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { LayoutGrid, Map as MapIcon, Search, SlidersHorizontal, X } from "lucide-react";
 import type { Property, PropertyType } from "@/data/types";
 import PropertyCard from "./PropertyCard";
@@ -50,6 +51,30 @@ function matchesBeds(bedsFilter: string, propertyBeds: number): boolean {
   return propertyBeds >= Number(bedsFilter);
 }
 
+const DEFAULT_FILTERS: Omit<Filters, "category"> = {
+  status: "buy",
+  type: "",
+  area: "",
+  city: "",
+  beds: "",
+  maxPrice: "",
+  q: "",
+};
+
+/** Same shape page.tsx used to compute server-side from `searchParams` — reads the URL directly instead, client-side. */
+function readFiltersFromLocation(): Omit<Filters, "category"> {
+  const params = new URLSearchParams(window.location.search);
+  return {
+    status: params.get("status") === "rent" ? "rent" : "buy",
+    type: params.get("type") ?? "",
+    area: params.get("area") ?? "",
+    city: params.get("city") ?? "",
+    beds: params.get("beds") ?? "",
+    maxPrice: params.get("maxPrice") ?? "",
+    q: params.get("q") ?? "",
+  };
+}
+
 function Chevron() {
   return (
     <svg
@@ -65,18 +90,12 @@ function Chevron() {
 export default function PropertiesExplorer({
   properties,
   areaNames,
-  initialFilters,
-  breadcrumb,
-  heading,
 }: {
   properties: Property[];
   areaNames: string[];
-  initialFilters: Omit<Filters, "category">;
-  breadcrumb: ReactNode;
-  heading: string;
 }) {
-  const [filters, setFilters] = useState<Filters>({ ...initialFilters, category: "" });
-  const [qDraft, setQDraft] = useState(initialFilters.q);
+  const [filters, setFilters] = useState<Filters>({ ...DEFAULT_FILTERS, category: "" });
+  const [qDraft, setQDraft] = useState(DEFAULT_FILTERS.q);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [sort, setSort] = useState<SortOption>("newest");
   const [filtersOpen, setFiltersOpen] = useState(false);
@@ -84,6 +103,21 @@ export default function PropertiesExplorer({
   const [showMap, setShowMap] = useState(true);
   const [visibleCount, setVisibleCount] = useState(CARDS_PAGE_SIZE);
   const filtersRef = useRef<HTMLDivElement>(null);
+
+  // The server-rendered shell always starts from DEFAULT_FILTERS (buy,
+  // nothing else set) so this page never has to read `searchParams` and
+  // can ship from a prerendered/cached static shell instead of blocking
+  // on a per-request render — that per-request wait was the actual
+  // "click Buy/Rent and it hangs" delay. Real filters from the URL
+  // (?status=rent&area=…) apply here, right after mount.
+  useEffect(() => {
+    const syncFiltersFromUrl = () => {
+      const fromUrl = readFiltersFromLocation();
+      setFilters({ ...fromUrl, category: "" });
+      setQDraft(fromUrl.q);
+    };
+    syncFiltersFromUrl();
+  }, []);
 
   useEffect(() => {
     if (!filtersOpen) return;
@@ -179,6 +213,13 @@ export default function PropertiesExplorer({
   function updateFilter<K extends keyof Filters>(key: K, value: Filters[K]) {
     setFilters((prev) => ({ ...prev, [key]: value }));
   }
+
+  const locationLabel = filters.area || filters.city;
+  const statusLabel = filters.status === "buy" ? "Buy" : "Rent";
+  const heading =
+    filters.status === "buy"
+      ? `Properties for Sale${locationLabel ? ` in ${locationLabel}` : ""}`
+      : `Properties for Rent${locationLabel ? ` in ${locationLabel}` : ""}`;
 
   return (
     <div>
@@ -494,7 +535,17 @@ export default function PropertiesExplorer({
           }`}
         >
           <div>
-            {breadcrumb}
+            <nav className="text-sm text-[#6b7280]">
+              <Link href="/" className="hover:text-gold-600">
+                Home
+              </Link>
+              <span className="mx-2">/</span>
+              <Link href={`/properties?status=${filters.status}`} className="hover:text-gold-600">
+                {statusLabel}
+              </Link>
+              <span className="mx-2">/</span>
+              <span className="text-ink-600">{heading}</span>
+            </nav>
             <h1 className="mt-3 font-serif text-h1 font-semibold text-ink-900">
               {heading}
             </h1>
