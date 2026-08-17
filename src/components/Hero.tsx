@@ -19,12 +19,12 @@ export default async function Hero() {
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_30%,rgba(35,23,10,0.55)_100%)]" />
 
       <div className="relative z-10 mx-auto w-full px-5 text-center lg:px-8">
-        <div className="animate-fade-up flex items-center justify-center gap-4">
-          <span className="h-px w-8 bg-gradient-to-r from-transparent to-gold-400/80 sm:w-12" />
-          <p className="text-eyebrow font-medium uppercase tracking-[0.4em] text-gold-400">
+        <div className="animate-fade-up flex items-center justify-center gap-2 sm:gap-4">
+          <span className="hidden h-px w-8 bg-gradient-to-r from-transparent to-gold-400/80 sm:block sm:w-12" />
+          <p className="whitespace-nowrap text-eyebrow font-medium uppercase tracking-[0.15em] text-gold-400 sm:tracking-[0.4em]">
             Doha · Lusail · The Pearl
           </p>
-          <span className="h-px w-8 bg-gradient-to-l from-transparent to-gold-400/80 sm:w-12" />
+          <span className="hidden h-px w-8 bg-gradient-to-l from-transparent to-gold-400/80 sm:block sm:w-12" />
         </div>
 
         <h1

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { LayoutGrid, Map as MapIcon, Search, SlidersHorizontal, X } from "lucide-react";
 import type { Property, PropertyType } from "@/data/types";
 import PropertyCard from "./PropertyCard";
@@ -83,6 +83,18 @@ export default function PropertiesExplorer({
   const [activeId, setActiveId] = useState<string | null>(null);
   const [showMap, setShowMap] = useState(true);
   const [visibleCount, setVisibleCount] = useState(CARDS_PAGE_SIZE);
+  const filtersRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!filtersOpen) return;
+    function handlePointerDown(e: PointerEvent) {
+      if (filtersRef.current && !filtersRef.current.contains(e.target as Node)) {
+        setFiltersOpen(false);
+      }
+    }
+    document.addEventListener("pointerdown", handlePointerDown);
+    return () => document.removeEventListener("pointerdown", handlePointerDown);
+  }, [filtersOpen]);
 
   useEffect(() => {
     const handle = setTimeout(() => {
@@ -176,7 +188,7 @@ export default function PropertiesExplorer({
       >
         <div className="mx-auto max-w-[100rem] px-5 lg:px-8">
           <div className="flex flex-wrap items-center gap-1.5 py-1.5">
-            <div className="relative flex h-9 w-full max-w-[200px] items-center gap-1 rounded-full border border-ink-900/10 bg-[#f3f2ef] pl-1 pr-1.5 transition-colors duration-300 focus-within:border-ink-900/25 sm:max-w-[230px]">
+            <div className="relative flex h-9 w-full items-center gap-1 rounded-full border border-ink-900/10 bg-[#f3f2ef] pl-1 pr-1.5 transition-colors duration-300 focus-within:border-ink-900/25 sm:w-auto sm:max-w-[230px]">
               <div className="relative shrink-0">
                 <select
                   value={filters.status}
@@ -262,7 +274,7 @@ export default function PropertiesExplorer({
               </button>
             </div>
 
-            <div className="flex h-9 items-center gap-0.5 rounded-full bg-[#f3f2ef] p-1">
+            <div className="hidden h-9 items-center gap-0.5 rounded-full bg-[#f3f2ef] p-1 sm:flex">
               {(
                 [
                   { value: "", label: "All" },
@@ -285,7 +297,7 @@ export default function PropertiesExplorer({
               ))}
             </div>
 
-            <div className="relative">
+            <div className="relative hidden sm:block">
               <select
                 value={filters.area}
                 onChange={(e) => updateFilter("area", e.target.value)}
@@ -301,7 +313,7 @@ export default function PropertiesExplorer({
               <Chevron />
             </div>
 
-            <div className="relative">
+            <div className="relative hidden sm:block">
               <select
                 value={filters.beds}
                 onChange={(e) => updateFilter("beds", e.target.value)}
@@ -318,12 +330,13 @@ export default function PropertiesExplorer({
               <Chevron />
             </div>
 
-            <div className="relative">
+            <div className="flex w-full items-center justify-between gap-2 sm:contents">
+            <div className="relative" ref={filtersRef}>
               <button
                 type="button"
                 onClick={() => setFiltersOpen((v) => !v)}
                 className={`flex h-9 items-center gap-1.5 rounded-full px-3 text-xs font-medium transition ${
-                  filters.maxPrice || filters.type
+                  filters.maxPrice || filters.type || filters.category || filters.area || filters.beds
                     ? "bg-ink-900 text-white"
                     : "bg-[#f3f2ef] text-ink-900 hover:bg-[#e9e7e1]"
                 }`}
@@ -332,8 +345,69 @@ export default function PropertiesExplorer({
                 Filters
               </button>
               {filtersOpen && (
-                <div className="absolute right-0 top-full z-30 mt-2 w-72 rounded-xl border border-gray-100 bg-white p-4 shadow-xl">
-                  <label className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+                <div className="absolute left-0 top-full z-30 mt-2 w-72 max-w-[calc(100vw-2.5rem)] rounded-xl border border-gray-100 bg-white p-4 shadow-xl sm:left-auto sm:right-0">
+                  <div className="sm:hidden">
+                    <label className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+                      Category
+                    </label>
+                    <div className="mt-2 flex items-center gap-0.5 rounded-full bg-[#f3f2ef] p-1">
+                      {(
+                        [
+                          { value: "", label: "All" },
+                          { value: "residential", label: "Residential" },
+                          { value: "commercial", label: "Commercial" },
+                        ] as { value: Category; label: string }[]
+                      ).map((opt) => (
+                        <button
+                          key={opt.label}
+                          type="button"
+                          onClick={() => updateFilter("category", opt.value)}
+                          className={`flex-1 rounded-full px-2.5 py-1.5 text-xs font-semibold transition ${
+                            filters.category === opt.value
+                              ? "bg-ink-900 text-white"
+                              : "text-gray-500 hover:text-ink-900"
+                          }`}
+                        >
+                          {opt.label}
+                        </button>
+                      ))}
+                    </div>
+
+                    <label className="mt-4 block text-xs font-semibold uppercase tracking-wide text-gray-500">
+                      Location
+                    </label>
+                    <select
+                      value={filters.area}
+                      onChange={(e) => updateFilter("area", e.target.value)}
+                      className="mt-2 w-full appearance-none rounded-lg border border-ink-900/10 bg-white px-3 py-2 text-sm text-ink-900 focus:border-black/40 focus:outline-none"
+                    >
+                      <option value="">Any Location</option>
+                      {areaNames.map((a) => (
+                        <option key={a} value={a}>
+                          {a}
+                        </option>
+                      ))}
+                    </select>
+
+                    <label className="mt-4 block text-xs font-semibold uppercase tracking-wide text-gray-500">
+                      Beds
+                    </label>
+                    <select
+                      value={filters.beds}
+                      onChange={(e) => updateFilter("beds", e.target.value)}
+                      className="mt-2 w-full appearance-none rounded-lg border border-ink-900/10 bg-white px-3 py-2 text-sm text-ink-900 focus:border-black/40 focus:outline-none"
+                    >
+                      <option value="">Any</option>
+                      <option value="studio">Studio</option>
+                      {[1, 2, 3, 4, 5, 6].map((n) => (
+                        <option key={n} value={n}>
+                          {n}+ Beds
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <label className="mt-4 block text-xs font-semibold uppercase tracking-wide text-gray-500 sm:mt-0">
                     Property Type
                   </label>
                   <div className="mt-2 flex flex-wrap gap-1.5">
@@ -386,7 +460,7 @@ export default function PropertiesExplorer({
               )}
             </div>
 
-            <div className="ml-auto flex h-9 items-center gap-0.5 rounded-full bg-[#f3f2ef] p-1">
+            <div className="flex h-9 items-center gap-0.5 rounded-full bg-[#f3f2ef] p-1 sm:ml-auto">
               <button
                 type="button"
                 onClick={() => setShowMap(false)}
@@ -407,6 +481,7 @@ export default function PropertiesExplorer({
                 <MapIcon className="h-3.5 w-3.5" strokeWidth={1.8} />
                 Map
               </button>
+            </div>
             </div>
           </div>
         </div>
@@ -457,12 +532,13 @@ export default function PropertiesExplorer({
                     showMap ? "" : "lg:grid-cols-3 xl:grid-cols-4"
                   }`}
                 >
-                  {visible.map((property) => (
+                  {visible.map((property, i) => (
                     <PropertyCard
                       key={property.id}
                       property={property}
                       active={activeId === property.id}
                       onHover={setActiveId}
+                      priority={i < 4}
                     />
                   ))}
                 </div>

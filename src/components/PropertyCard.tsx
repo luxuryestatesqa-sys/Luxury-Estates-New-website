@@ -6,6 +6,7 @@ import { useState } from "react";
 import { ImageOff } from "lucide-react";
 import type { Property } from "@/data/types";
 import { formatLocation, formatNumber, formatPrice } from "@/lib/format";
+import { shimmerBlurDataURL } from "@/lib/image";
 
 const BED_ICON = "M21 10.5V7a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2v3.5A2.5 2.5 0 0 0 5 13v5h1.2l.6-1.5h10.4l.6 1.5H19v-5a2.5 2.5 0 0 0-2-2.5ZM9 7h10v3.05a2.5 2.5 0 0 0-.5-.05H9V7ZM7 13a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 .5.5v2H7v-2Z";
 const BATH_ICON = "M7 3a2 2 0 0 0-2 2v5H4a1 1 0 0 0-1 1v2a5 5 0 0 0 3 4.58V19a1 1 0 1 0 2 0v-1h8v1a1 1 0 1 0 2 0v-1.42A5 5 0 0 0 21 13v-2a1 1 0 0 0-1-1H7V5h1a1 1 0 1 0 0-2H7Zm-2 9h14v1a3 3 0 0 1-3 3H8a3 3 0 0 1-3-3v-1Z";
@@ -15,10 +16,12 @@ export default function PropertyCard({
   property,
   active = false,
   onHover,
+  priority = false,
 }: {
   property: Property;
   active?: boolean;
   onHover?: (id: string | null) => void;
+  priority?: boolean;
 }) {
   const [saved, setSaved] = useState(false);
   const agent = property.agent;
@@ -46,6 +49,10 @@ export default function PropertyCard({
             fill
             sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
             className="object-cover transition duration-500 group-hover:scale-[1.03]"
+            quality={65}
+            placeholder="blur"
+            blurDataURL={shimmerBlurDataURL(400, 250)}
+            priority={priority}
           />
         ) : (
           <div className="flex h-full w-full items-center justify-center bg-gray-100 text-gray-300">

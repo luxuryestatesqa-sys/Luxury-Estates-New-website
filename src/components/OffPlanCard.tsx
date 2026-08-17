@@ -3,8 +3,15 @@ import Link from "next/link";
 import { ImageOff } from "lucide-react";
 import type { OffPlanProject } from "@/data/types";
 import { formatLocation, formatNumber, formatPrice } from "@/lib/format";
+import { shimmerBlurDataURL } from "@/lib/image";
 
-export default function OffPlanCard({ project }: { project: OffPlanProject }) {
+export default function OffPlanCard({
+  project,
+  priority = false,
+}: {
+  project: OffPlanProject;
+  priority?: boolean;
+}) {
   return (
     <Link
       href={`/off-plan/${project.slug}`}
@@ -18,6 +25,10 @@ export default function OffPlanCard({ project }: { project: OffPlanProject }) {
             fill
             sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
             className="object-cover transition duration-500 group-hover:scale-105"
+            quality={65}
+            placeholder="blur"
+            blurDataURL={shimmerBlurDataURL(400, 275)}
+            priority={priority}
           />
         ) : (
           <div className="flex h-full w-full items-center justify-center bg-gray-100 text-gray-300">

@@ -125,8 +125,8 @@ export default async function OffPlanPage({
 
       {filtered.length > 0 ? (
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-          {filtered.map((project) => (
-            <OffPlanCard key={project.id} project={project} />
+          {filtered.map((project, i) => (
+            <OffPlanCard key={project.id} project={project} priority={i < 3} />
           ))}
         </div>
       ) : (

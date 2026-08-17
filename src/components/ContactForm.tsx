@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 
@@ -156,7 +157,11 @@ export default function ContactForm() {
           type="checkbox"
           className="mt-0.5 h-4 w-4 rounded border-[#e8e8e8] text-ink-900 focus:ring-gold-500"
         />
-        I agree to the privacy policy.
+        I agree to the{" "}
+        <Link href="/privacy" className="text-gold-600 hover:underline">
+          privacy policy
+        </Link>
+        .
       </label>
 
       {error && <p className="mt-4 text-sm text-red-600">{error}</p>}

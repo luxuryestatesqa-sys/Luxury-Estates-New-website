@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useRef, useState } from "react";
 import { ChevronLeft, ChevronRight, ImageOff } from "lucide-react";
+import { shimmerBlurDataURL } from "@/lib/image";
 
 export default function PropertyGallery({
   images,
@@ -20,7 +21,10 @@ export default function PropertyGallery({
     setActive(next);
     const strip = stripRef.current;
     const thumb = strip?.children[next] as HTMLElement | undefined;
-    thumb?.scrollIntoView({ behavior: "smooth", inline: "nearest", block: "nearest" });
+    if (strip && thumb) {
+      const targetLeft = thumb.offsetLeft - (strip.clientWidth - thumb.clientWidth) / 2;
+      strip.scrollTo({ left: targetLeft, behavior: "smooth" });
+    }
   }
 
   const SWIPE_THRESHOLD = 40;
@@ -52,6 +56,8 @@ export default function PropertyGallery({
             priority
             sizes="(min-width: 1024px) 60vw, 100vw"
             className="object-cover"
+            placeholder="blur"
+            blurDataURL={shimmerBlurDataURL(800, 500)}
           />
         ) : (
           <div className="flex h-full w-full items-center justify-center text-gray-300">
@@ -87,7 +93,7 @@ export default function PropertyGallery({
       {images.length > 1 && (
         <div
           ref={stripRef}
-          className="mt-3 flex snap-x snap-mandatory gap-3 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          className="mt-3 flex touch-pan-x snap-x snap-proximity gap-3 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         >
           {images.map((src, i) => (
             <button
@@ -104,6 +110,9 @@ export default function PropertyGallery({
                 fill
                 sizes="200px"
                 className="object-cover"
+                quality={60}
+                placeholder="blur"
+                blurDataURL={shimmerBlurDataURL(200, 150)}
               />
             </button>
           ))}

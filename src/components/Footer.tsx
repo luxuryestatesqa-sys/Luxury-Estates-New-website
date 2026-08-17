@@ -138,11 +138,17 @@ export default function Footer() {
             A platform by <span className="font-semibold text-white">Luxury Estates Group</span>
           </p>
           <div className="flex items-center gap-3 text-sm text-white/85">
-            <span className="transition hover:text-gold-400">Privacy Policy</span>
+            <Link href="/privacy" className="transition hover:text-gold-400">
+              Privacy Policy
+            </Link>
             <span className="text-white/20">|</span>
-            <span className="transition hover:text-gold-400">Terms and Conditions</span>
+            <Link href="/terms" className="transition hover:text-gold-400">
+              Terms and Conditions
+            </Link>
             <span className="text-white/20">|</span>
-            <span className="transition hover:text-gold-400">Use of Cookies</span>
+            <Link href="/cookies" className="transition hover:text-gold-400">
+              Use of Cookies
+            </Link>
           </div>
         </div>
       </div>
