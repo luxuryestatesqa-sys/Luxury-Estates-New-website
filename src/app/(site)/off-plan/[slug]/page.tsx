@@ -4,7 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Award, CalendarClock, Home, Ruler, ShieldCheck } from "lucide-react";
 import { getOffPlanProjectBySlug, getOffPlanProjects } from "@/data/offplan";
-import { formatLocation, formatNumber, formatPrice } from "@/lib/format";
+import { formatLocation, formatNumber, formatPrice, truncateForMeta } from "@/lib/format";
 import PropertyGallery from "@/components/PropertyGallery";
 import InquiryForm from "@/components/InquiryForm";
 import OffPlanCard from "@/components/OffPlanCard";
@@ -50,10 +50,26 @@ export async function generateMetadata({
   const { slug } = await params;
   const project = await getOffPlanProjectBySlug(slug);
   if (!project) return {};
+  const title = `${project.name} — Off-Plan in ${formatLocation(project.area, project.city)}`;
+  const description = truncateForMeta(
+    project.description || `${project.name} by ${project.developer}, an off-plan development in ${formatLocation(project.area, project.city)}, Qatar.`,
+  );
+  const url = `${SITE_URL}/off-plan/${project.slug}`;
   return {
-    title: project.name,
-    description: project.description,
-    alternates: { canonical: `${SITE_URL}/off-plan/${project.slug}` },
+    title,
+    description,
+    alternates: { canonical: url },
+    openGraph: {
+      title,
+      description,
+      url,
+      images: project.images[0] ? [{ url: project.images[0] }] : undefined,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+    },
   };
 }
 

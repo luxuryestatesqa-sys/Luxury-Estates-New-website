@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getPropertyBySlug, getRelatedProperties } from "@/data/properties";
-import { formatLocation, formatNumber, formatPrice } from "@/lib/format";
+import { formatLocation, formatNumber, formatPrice, truncateForMeta } from "@/lib/format";
 import PropertyGallery from "@/components/PropertyGallery";
 import InquiryForm from "@/components/InquiryForm";
 import PropertyCard from "@/components/PropertyCard";
@@ -56,10 +56,30 @@ export async function generateMetadata({
   const { slug } = await params;
   const property = await getPropertyBySlug(slug);
   if (!property) return {};
+  // Property Finder titles are already location-rich ("… | Porto Arabia"),
+  // unlike off-plan project names, so this doesn't append the area again —
+  // that just made titles run long enough to get truncated in search results.
+  const title = property.title;
+  const description = truncateForMeta(
+    property.description ||
+      `${property.status === "buy" ? "For sale" : "For rent"} in ${formatLocation(property.area, property.city)}, Qatar.`,
+  );
+  const url = `${SITE_URL}/properties/${property.slug}`;
   return {
-    title: property.title,
-    description: property.description,
-    alternates: { canonical: `${SITE_URL}/properties/${property.slug}` },
+    title,
+    description,
+    alternates: { canonical: url },
+    openGraph: {
+      title,
+      description,
+      url,
+      images: property.images[0] ? [{ url: property.images[0] }] : undefined,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+    },
   };
 }
 

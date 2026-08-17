@@ -24,6 +24,13 @@ export function formatLocation(area: string, city: string) {
   return [area, city].filter(Boolean).join(", ");
 }
 
+/** Trims a long synced description down to a clean meta-description length — cuts at a word boundary instead of mid-word, since Google truncates around ~155-160 chars anyway. */
+export function truncateForMeta(text: string, max = 155) {
+  const flat = text.replace(/\s+/g, " ").trim();
+  if (flat.length <= max) return flat;
+  return `${flat.slice(0, max).replace(/\s+\S*$/, "")}…`;
+}
+
 /** Strips everything but digits so `https://wa.me/{n}` links never break on a stray "+" or space. */
 export function sanitizeWhatsapp(raw: string | null | undefined): string {
   return (raw ?? "").replace(/\D/g, "");
