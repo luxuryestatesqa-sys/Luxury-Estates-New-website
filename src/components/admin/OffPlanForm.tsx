@@ -104,6 +104,7 @@ export default function OffPlanForm({
       setError(dbError.message);
       return;
     }
+    await revalidateOffPlan();
     router.push("/admin/off-plan");
     router.refresh();
   }
@@ -119,6 +120,7 @@ export default function OffPlanForm({
       setError(dbError.message);
       return;
     }
+    await revalidateOffPlan();
     router.push("/admin/off-plan");
     router.refresh();
   }
@@ -252,6 +254,14 @@ export default function OffPlanForm({
       </div>
     </form>
   );
+}
+
+async function revalidateOffPlan() {
+  await fetch("/api/revalidate", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ tag: "off-plan" }),
+  }).catch(() => {});
 }
 
 const inputClass =

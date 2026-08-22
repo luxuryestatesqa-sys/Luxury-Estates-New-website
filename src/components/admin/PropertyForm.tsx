@@ -98,6 +98,7 @@ export default function PropertyForm({
       setError(dbError.message);
       return;
     }
+    await revalidateProperties();
     router.push("/admin/properties");
     router.refresh();
   }
@@ -113,6 +114,7 @@ export default function PropertyForm({
       setError(dbError.message);
       return;
     }
+    await revalidateProperties();
     router.push("/admin/properties");
     router.refresh();
   }
@@ -251,6 +253,14 @@ export default function PropertyForm({
       </div>
     </form>
   );
+}
+
+async function revalidateProperties() {
+  await fetch("/api/revalidate", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ tag: "properties" }),
+  }).catch(() => {});
 }
 
 const inputClass =
