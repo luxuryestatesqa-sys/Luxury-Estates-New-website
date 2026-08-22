@@ -106,6 +106,7 @@ export default async function PropertyDetailPage({
           { name: property.title, url: `${SITE_URL}/properties/${property.slug}` },
         ])}
       />
+      {property.images[0] && <link rel="image_src" href={property.images[0]} />}
 
       <nav className="mb-6 text-xs text-gray-400">
         <Link href="/properties" className="hover:text-gold-600">

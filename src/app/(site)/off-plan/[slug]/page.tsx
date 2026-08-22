@@ -104,6 +104,7 @@ export default async function OffPlanDetailPage({
           { name: project.name, url: `${SITE_URL}/off-plan/${project.slug}` },
         ])}
       />
+      {project.images[0] && <link rel="image_src" href={project.images[0]} />}
 
       {/* Full-bleed hero — the page's first impression for ad traffic landing directly here. */}
       <section className="relative flex min-h-[440px] items-end overflow-hidden bg-ink-950 sm:min-h-[520px]">
