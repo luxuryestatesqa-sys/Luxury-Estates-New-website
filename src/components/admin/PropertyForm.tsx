@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import ImageListField from "./ImageListField";
 import MapLinkField from "./MapLinkField";
+import MarkdownField from "./MarkdownField";
 import { Card, FormSection } from "./ui";
 
 const PROPERTY_TYPES = ["Apartment", "Villa", "Penthouse", "Townhouse", "Office", "Land"];
@@ -205,9 +206,7 @@ export default function PropertyForm({
         </FormSection>
 
         <FormSection title="Description & Amenities">
-          <Field label="Description">
-            <textarea rows={4} value={values.description} onChange={(e) => set("description", e.target.value)} className={inputClass} />
-          </Field>
+          <MarkdownField label="Description" value={values.description} onChange={(v) => set("description", v)} rows={6} />
           <Field label="Amenities (one per line)">
             <textarea rows={5} value={amenitiesText} onChange={(e) => setAmenitiesText(e.target.value)} className={inputClass} />
           </Field>

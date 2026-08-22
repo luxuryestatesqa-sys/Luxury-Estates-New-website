@@ -6,6 +6,7 @@ import { createClient } from "@/lib/supabase/client";
 import ImageListField from "./ImageListField";
 import FileField from "./FileField";
 import MapLinkField from "./MapLinkField";
+import MarkdownField from "./MarkdownField";
 import { Card, FormSection } from "./ui";
 
 const STATUSES = ["Pre-Launch", "Off-Plan", "Under Construction", "Nearing Completion"];
@@ -202,9 +203,7 @@ export default function OffPlanForm({
         </FormSection>
 
         <FormSection title="Description & Details">
-          <Field label="Description">
-            <textarea rows={4} value={values.description} onChange={(e) => set("description", e.target.value)} className={inputClass} />
-          </Field>
+          <MarkdownField label="Description" value={values.description} onChange={(v) => set("description", v)} rows={6} />
           <Field label="Unit Types (one per line)">
             <textarea rows={4} value={unitTypesText} onChange={(e) => setUnitTypesText(e.target.value)} className={inputClass} />
           </Field>

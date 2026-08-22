@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import ReactMarkdown from "react-markdown";
 import { Award, CalendarClock, Home, Ruler, ShieldCheck } from "lucide-react";
 import { getOffPlanProjectBySlug, getOffPlanProjects } from "@/data/offplan";
 import { formatLocation, formatNumber, formatPrice, truncateForMeta } from "@/lib/format";
@@ -195,7 +196,9 @@ export default async function OffPlanDetailPage({
 
           <div className="mt-8">
             <h2 className="font-serif text-xl font-semibold text-ink-900">About this project</h2>
-            <p className="mt-3 whitespace-pre-line text-sm leading-relaxed text-gray-600">{project.description}</p>
+            <div className="prose prose-sm prose-neutral mt-3 max-w-none prose-headings:font-serif prose-headings:text-ink-900 prose-a:text-gold-600 prose-p:leading-relaxed prose-p:text-gray-600">
+              <ReactMarkdown>{project.description}</ReactMarkdown>
+            </div>
           </div>
 
           {(project.unitTypes.length > 0 || project.paymentPlan) && (
