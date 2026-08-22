@@ -98,10 +98,17 @@ export default function ProjectLocationMap({ name, area, city, lat, lng }: Proje
         >
           <OverlayView position={position} mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}>
             <div
-              className="inline-block -translate-x-1/2 -translate-y-full whitespace-nowrap rounded-full bg-ink-900 px-3 py-1.5 text-xs font-semibold text-white shadow-md"
+              className="-translate-x-1/2 -translate-y-full"
               style={{ position: "relative" }}
+              title={name}
             >
-              {name}
+              <svg width="32" height="42" viewBox="0 0 32 42" fill="none" className="drop-shadow-md">
+                <path
+                  d="M16 0C7.163 0 0 7.163 0 16c0 11 16 26 16 26s16-15 16-26c0-8.837-7.163-16-16-16Z"
+                  fill="#141414"
+                />
+                <circle cx="16" cy="16" r="6" fill="#B8923F" />
+              </svg>
             </div>
           </OverlayView>
         </GoogleMap>
