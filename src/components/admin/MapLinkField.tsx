@@ -16,6 +16,11 @@ export default function MapLinkField({
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
+    // This form is nested inside the project's outer <form> (Save Changes).
+    // The native "submit" event bubbles, and without stopping it here it
+    // would also trigger the outer form's onSubmit — saving the project
+    // immediately with stale (pre-resolution) lat/lng and navigating away.
+    e.stopPropagation();
     if (!link.trim()) return;
     setStatus({ state: "loading" });
 
