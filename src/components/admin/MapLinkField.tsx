@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useState, type KeyboardEvent } from "react";
 import { MapPin } from "lucide-react";
 import { parseCoordsFromText } from "@/lib/googleMapsLink";
 
@@ -14,13 +14,11 @@ export default function MapLinkField({
     { state: "idle" } | { state: "loading" } | { state: "ok"; lat: number; lng: number } | { state: "error"; message: string }
   >({ state: "idle" });
 
-  async function handleSubmit(e: FormEvent) {
-    e.preventDefault();
-    // This form is nested inside the project's outer <form> (Save Changes).
-    // The native "submit" event bubbles, and without stopping it here it
-    // would also trigger the outer form's onSubmit — saving the project
-    // immediately with stale (pre-resolution) lat/lng and navigating away.
-    e.stopPropagation();
+  // Deliberately not a <form>: this field lives inside the project's outer
+  // <form> (Save Changes), and HTML doesn't allow forms to nest — the
+  // browser's parser breaks the DOM structure on the server-rendered HTML,
+  // causing a hydration error and an unrelated-looking reset of this field.
+  async function handleResolve() {
     if (!link.trim()) return;
     setStatus({ state: "loading" });
 
@@ -58,23 +56,30 @@ export default function MapLinkField({
         Open the project&apos;s location in Google Maps, tap Share, copy the link, and paste it
         here — this sets the exact pin below for you.
       </p>
-      <form onSubmit={handleSubmit} className="mt-2 flex gap-2">
+      <div className="mt-2 flex gap-2">
         <input
           type="text"
           value={link}
           onChange={(e) => setLink(e.target.value)}
+          onKeyDown={(e: KeyboardEvent<HTMLInputElement>) => {
+            if (e.key === "Enter") {
+              e.preventDefault();
+              handleResolve();
+            }
+          }}
           placeholder="https://maps.app.goo.gl/…"
           className="min-w-0 flex-1 rounded-lg border border-gray-200 px-3 py-2.5 text-sm text-ink-900 focus:border-gold-500 focus:outline-none"
         />
         <button
-          type="submit"
+          type="button"
+          onClick={handleResolve}
           disabled={status.state === "loading" || !link.trim()}
           className="flex shrink-0 items-center gap-1.5 rounded-lg bg-ink-900 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-gold-600 disabled:opacity-50"
         >
           <MapPin className="h-3.5 w-3.5" strokeWidth={2} />
           {status.state === "loading" ? "Finding…" : "Use this location"}
         </button>
-      </form>
+      </div>
       {status.state === "ok" && (
         <p className="mt-1.5 text-xs font-medium text-green-700">
           Location set: {status.lat.toFixed(5)}, {status.lng.toFixed(5)}
