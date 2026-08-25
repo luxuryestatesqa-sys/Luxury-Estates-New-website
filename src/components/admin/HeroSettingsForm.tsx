@@ -59,6 +59,14 @@ export default function HeroSettingsForm({ initial }: { initial: HeroSettingsVal
       return;
     }
     setSaved(true);
+    // Push the change to the live homepage now rather than waiting on its
+    // route-level revalidate window (kept long as a safety net, not the
+    // primary freshness mechanism — see /api/revalidate).
+    fetch("/api/revalidate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ path: "/" }),
+    }).catch(() => {});
     router.refresh();
   }
 

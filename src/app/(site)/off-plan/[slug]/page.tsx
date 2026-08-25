@@ -41,7 +41,8 @@ function offPlanJsonLd(project: OffPlanProject) {
   };
 }
 
-export const revalidate = 300;
+// Safety net only — admin saves push fresh data instantly via /api/revalidate.
+export const revalidate = 3600;
 
 export async function generateMetadata({
   params,

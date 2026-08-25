@@ -13,7 +13,8 @@ export const metadata: Metadata = {
   alternates: { canonical: `${SITE_URL}/about` },
 };
 
-export const revalidate = 300;
+// Safety net only — admin saves push fresh data instantly via /api/revalidate.
+export const revalidate = 3600;
 
 const stats = [
   { value: "12+", label: "Years Experience" },

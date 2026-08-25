@@ -47,7 +47,8 @@ function propertyJsonLd(property: Property) {
   };
 }
 
-export const revalidate = 60;
+// Safety net only — admin saves push fresh data instantly via /api/revalidate.
+export const revalidate = 3600;
 
 export async function generateMetadata({
   params,

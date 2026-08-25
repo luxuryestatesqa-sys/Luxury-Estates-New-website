@@ -18,7 +18,11 @@ export const metadata: Metadata = {
   alternates: { canonical: SITE_URL },
 };
 
-export const revalidate = 60;
+// Content changes are pushed instantly by /api/revalidate when an admin
+// saves (properties/off-plan/agents/blog via revalidateTag, hero settings
+// via revalidatePath("/")) — this is just a safety net, not the primary
+// freshness mechanism, so it can stay long without anything looking stale.
+export const revalidate = 3600;
 
 export default function Home() {
   return (

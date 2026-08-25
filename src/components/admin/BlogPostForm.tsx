@@ -63,6 +63,7 @@ export default function BlogPostForm({ initial }: { initial?: BlogPostFormValues
       setError(dbError.message);
       return;
     }
+    await revalidateBlog();
     router.push("/admin/blog");
     router.refresh();
   }
@@ -78,6 +79,7 @@ export default function BlogPostForm({ initial }: { initial?: BlogPostFormValues
       setError(dbError.message);
       return;
     }
+    await revalidateBlog();
     router.push("/admin/blog");
     router.refresh();
   }
@@ -158,4 +160,12 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
       {children}
     </div>
   );
+}
+
+async function revalidateBlog() {
+  await fetch("/api/revalidate", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ tag: "blog" }),
+  }).catch(() => {});
 }

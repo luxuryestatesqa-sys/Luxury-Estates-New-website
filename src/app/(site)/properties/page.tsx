@@ -9,7 +9,8 @@ export const metadata: Metadata = {
   alternates: { canonical: `${SITE_URL}/properties` },
 };
 
-export const revalidate = 60;
+// Safety net only — admin saves push fresh data instantly via /api/revalidate.
+export const revalidate = 3600;
 
 export default async function PropertiesPage() {
   const [properties, areaNames] = await Promise.all([getPropertiesForListing(), getAreaNames()]);

@@ -8,7 +8,8 @@ import { formatDate } from "@/lib/format";
 import BlogCard from "@/components/BlogCard";
 import { SITE_URL } from "@/lib/site";
 
-export const revalidate = 300;
+// Safety net only — admin saves push fresh data instantly via /api/revalidate.
+export const revalidate = 3600;
 
 export async function generateMetadata({
   params,
