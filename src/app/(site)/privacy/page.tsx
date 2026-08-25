@@ -32,8 +32,8 @@ export default function PrivacyPage() {
               info@luxuryestates.qa
             </a>{" "}
             or{" "}
-            <a href="tel:+97471157307" className="text-gold-600 hover:underline">
-              +974 7115 7307
+            <a href="tel:+97470896755" className="text-gold-600 hover:underline">
+              +974 7089 6755
             </a>
             .
           </p>

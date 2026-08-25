@@ -7,6 +7,7 @@ const discoverLinks = [
   { href: "/off-plan", label: "New Developments" },
   { href: "/properties", label: "Exclusive Properties" },
   { href: "/properties", label: "Qatar's Areas" },
+  { href: "/huzoom-lands-for-sale", label: "Huzoom Lusail — Land for Sale" },
   { href: "/contact", label: "Off-Market" },
   { href: "/blog", label: "Blog" },
 ];

@@ -15,8 +15,8 @@ import JsonLd, { breadcrumbJsonLd } from "@/components/JsonLd";
 import { SITE_URL } from "@/lib/site";
 import type { OffPlanProject } from "@/data/types";
 
-const COMPANY_PHONE = "+97471157307";
-const COMPANY_WHATSAPP = "97471157307";
+const COMPANY_PHONE = "+97470896755";
+const COMPANY_WHATSAPP = "97470896755";
 
 function offPlanJsonLd(project: OffPlanProject) {
   const url = `${SITE_URL}/off-plan/${project.slug}`;

@@ -70,14 +70,22 @@ export default function PropertiesMap({ properties, activeId, onSelect }: Proper
   if (!GOOGLE_MAPS_API_KEY) {
     return (
       <div className="flex h-full min-h-[420px] flex-col items-center justify-center rounded-sm border border-dashed border-ink-900/20 bg-cream-100 p-8 text-center">
-        <p className="font-serif text-lg font-semibold text-ink-800">
-          Map view needs a Google Maps API key
-        </p>
-        <p className="mt-2 max-w-sm text-sm text-ink-500">
-          Add <code className="rounded bg-ink-900/10 px-1.5 py-0.5">NEXT_PUBLIC_GOOGLE_MAPS_API_KEY</code>{" "}
-          to <code className="rounded bg-ink-900/10 px-1.5 py-0.5">.env.local</code> and restart the
-          dev server to enable it.
-        </p>
+        <p className="font-serif text-lg font-semibold text-ink-800">Map view unavailable</p>
+        {process.env.NODE_ENV === "production" ? (
+          <p className="mt-2 max-w-sm text-sm text-ink-500">
+            We&apos;re unable to load the map right now. Browse listings using the list view
+            instead, or try again shortly.
+          </p>
+        ) : (
+          <p className="mt-2 max-w-sm text-sm text-ink-500">
+            Add{" "}
+            <code className="rounded bg-ink-900/10 px-1.5 py-0.5">
+              NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
+            </code>{" "}
+            to <code className="rounded bg-ink-900/10 px-1.5 py-0.5">.env.local</code> and restart
+            the dev server to enable it.
+          </p>
+        )}
       </div>
     );
   }
@@ -134,7 +142,13 @@ export default function PropertiesMap({ properties, activeId, onSelect }: Proper
               style={{ position: "relative" }}
             >
               <span className="bg-white px-3 py-1.5 text-xs font-semibold text-ink-900">
-                From <span className="font-bold">{formatPrice(property.price, property.priceUnit)}</span>
+                {property.price > 0 ? (
+                  <>
+                    From <span className="font-bold">{formatPrice(property.price, property.priceUnit)}</span>
+                  </>
+                ) : (
+                  <span className="font-bold">Price on request</span>
+                )}
               </span>
               <span className="flex items-center gap-1 bg-ink-900 px-2.5 py-1.5 text-xs font-semibold text-white">
                 {property.beds > 0 ? (
@@ -191,7 +205,7 @@ export default function PropertiesMap({ properties, activeId, onSelect }: Proper
                   </span>
                 </div>
                 <p className="mt-1 font-serif text-sm font-bold text-ink-900">
-                  {formatPrice(active.price, active.priceUnit)}
+                  {active.price > 0 ? formatPrice(active.price, active.priceUnit) : "Price on request"}
                 </p>
               </div>
             </Link>

@@ -63,8 +63,8 @@ export default function ContactPage() {
                 <div>
                   <p className="font-semibold text-ink-900">Call Us</p>
                   <p className="text-sm text-[#6b7280]">Sun–Thu 9am–6pm, Sat 10am–2pm</p>
-                  <a href="tel:+97471157307" className="mt-1 block text-sm text-ink-900 hover:text-gold-600">
-                    +974 7115 7307
+                  <a href="tel:+97470896755" className="mt-1 block text-sm text-ink-900 hover:text-gold-600">
+                    +974 7089 6755
                   </a>
                 </div>
               </div>
@@ -75,7 +75,7 @@ export default function ContactPage() {
                   <p className="font-semibold text-ink-900">WhatsApp</p>
                   <p className="text-sm text-[#6b7280]">Quick response, available 24/7</p>
                   <a
-                    href="https://wa.me/97471157307"
+                    href="https://wa.me/97470896755"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="mt-1 block text-sm text-ink-900 hover:text-gold-600"

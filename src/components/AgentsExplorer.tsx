@@ -20,7 +20,14 @@ function Chevron() {
   );
 }
 
-export default function AgentsExplorer({ agents }: { agents: Agent[] }) {
+export default function AgentsExplorer({
+  agents,
+  spotlightId,
+}: {
+  agents: Agent[];
+  /** Agent already shown in the leadership spotlight above — excluded here to avoid a duplicate card. */
+  spotlightId?: string;
+}) {
   const [query, setQuery] = useState("");
   const [location, setLocation] = useState("");
   const [language, setLanguage] = useState("");
@@ -43,7 +50,7 @@ export default function AgentsExplorer({ agents }: { agents: Agent[] }) {
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     const result = agents.filter((a) => {
-      if (a.featured) return false;
+      if (a.id === spotlightId) return false;
       if (q && !a.name.toLowerCase().includes(q)) return false;
       if (location && a.location !== location) return false;
       if (language && !a.languages.includes(language)) return false;
@@ -57,7 +64,7 @@ export default function AgentsExplorer({ agents }: { agents: Agent[] }) {
     if (sort === "name") result.sort((a, b) => a.name.localeCompare(b.name));
 
     return result;
-  }, [agents, query, location, language, specialty, sort]);
+  }, [agents, spotlightId, query, location, language, specialty, sort]);
 
   return (
     <div>

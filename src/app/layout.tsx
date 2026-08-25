@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, Inter, Public_Sans } from "next/font/google";
 import JsonLd from "@/components/JsonLd";
+import ScrollRestoration from "@/components/ScrollRestoration";
 import { SITE_URL } from "@/lib/site";
 import "./globals.css";
 
@@ -9,7 +10,7 @@ const organizationJsonLd = {
   "@type": "RealEstateAgent",
   name: "Luxury Estates",
   url: SITE_URL,
-  telephone: "+97471157307",
+  telephone: "+97470896755",
   email: "info@luxuryestates.qa",
   address: {
     "@type": "PostalAddress",
@@ -112,6 +113,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <JsonLd data={organizationJsonLd} />
         <JsonLd data={websiteJsonLd} />
         <JsonLd data={siteNavigationJsonLd} />
+        <ScrollRestoration />
         {children}
       </body>
     </html>

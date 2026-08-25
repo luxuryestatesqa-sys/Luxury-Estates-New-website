@@ -192,8 +192,8 @@ export default async function PropertyDetailPage({
                 photo={property.pfAgentPhoto ?? ""}
                 name={property.pfAgentName}
                 title={property.pfAgentTitle || "Real Estate Consultant"}
-                phone={property.pfAgentPhone ?? "+97471157307"}
-                whatsapp={property.pfAgentWhatsapp ?? "97471157307"}
+                phone={property.pfAgentPhone ?? "+97470896755"}
+                whatsapp={property.pfAgentWhatsapp ?? "97470896755"}
                 email={property.pfAgentEmail ?? "info@luxuryestates.qa"}
               />
             )

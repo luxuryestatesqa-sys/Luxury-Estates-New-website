@@ -70,7 +70,7 @@ export default async function AgentsPage() {
           </Reveal>
         )}
 
-        <AgentsExplorer agents={agents} />
+        <AgentsExplorer agents={agents} spotlightId={leader?.id} />
       </div>
 
       <AgentsCTA />

@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { Mail, Phone, Plus } from "lucide-react";
 
-const COMPANY_PHONE = "+97471157307";
+const COMPANY_PHONE = "+97470896755";
 const COMPANY_EMAIL = "info@luxuryestates.qa";
 
 export default function WhatsAppButton() {
@@ -60,7 +60,7 @@ export default function WhatsAppButton() {
 
       <div className="relative">
         <a
-          href="https://wa.me/97471157307"
+          href="https://wa.me/97470896755"
           target="_blank"
           rel="noopener noreferrer"
           aria-label="Chat with us on WhatsApp"

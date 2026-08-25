@@ -1,15 +1,17 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useId, useState, type FormEvent } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 
 export default function ContactForm() {
+  const id = useId();
   const searchParams = useSearchParams();
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [waUrl, setWaUrl] = useState("");
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -50,9 +52,10 @@ export default function ContactForm() {
 
       setSubmitted(true);
       const waText = `Enquiry from ${name} (${phone}, ${email}) — interested in ${interest}:\n\n${message}`;
-      const waUrl = `https://wa.me/97471157307?text=${encodeURIComponent(waText)}`;
-      if (waTab) waTab.location.href = waUrl;
-      else window.open(waUrl, "_blank");
+      const url = `https://wa.me/97470896755?text=${encodeURIComponent(waText)}`;
+      setWaUrl(url);
+      if (waTab) waTab.location.href = url;
+      else window.open(url, "_blank");
     } catch {
       waTab?.close();
       setError("Something went wrong. Please try again or contact us directly.");
@@ -68,9 +71,17 @@ export default function ContactForm() {
           Thank you — we&apos;ve received your message.
         </p>
         <p className="mt-2 text-sm text-[#6b7280]">
-          We&apos;ve opened WhatsApp with your message ready to send — just hit send there to
-          reach our team directly.
+          We&apos;ve tried to open WhatsApp with your message ready to send. If it didn&apos;t
+          open automatically (your browser may have blocked the popup), tap below to continue.
         </p>
+        <a
+          href={waUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-5 inline-flex items-center justify-center rounded-full bg-ink-900 px-6 py-3 text-sm font-semibold text-white transition hover:bg-gold-500 hover:text-ink-950"
+        >
+          Continue on WhatsApp
+        </a>
       </div>
     );
   }
@@ -81,44 +92,64 @@ export default function ContactForm() {
 
       <div className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2">
         <div>
-          <label className="mb-1.5 block text-sm font-medium text-[#6b7280]">
+          <label
+            htmlFor={`${id}-name`}
+            className="mb-1.5 block text-sm font-medium text-[#6b7280]"
+          >
             Full Name
           </label>
           <input
             required
+            id={`${id}-name`}
             name="name"
             type="text"
+            autoComplete="name"
             className="w-full rounded-lg border border-[#e8e8e8] px-4 py-2.5 text-sm text-ink-900 focus:border-gold-500 focus:outline-none"
           />
         </div>
         <div>
-          <label className="mb-1.5 block text-sm font-medium text-[#6b7280]">Phone</label>
+          <label
+            htmlFor={`${id}-phone`}
+            className="mb-1.5 block text-sm font-medium text-[#6b7280]"
+          >
+            Phone
+          </label>
           <input
             required
+            id={`${id}-phone`}
             name="phone"
             type="tel"
+            autoComplete="tel"
             className="w-full rounded-lg border border-[#e8e8e8] px-4 py-2.5 text-sm text-ink-900 focus:border-gold-500 focus:outline-none"
           />
         </div>
       </div>
 
       <div className="mt-5">
-        <label className="mb-1.5 block text-sm font-medium text-[#6b7280]">Email</label>
+        <label htmlFor={`${id}-email`} className="mb-1.5 block text-sm font-medium text-[#6b7280]">
+          Email
+        </label>
         <input
           required
+          id={`${id}-email`}
           name="email"
           type="email"
+          autoComplete="email"
           className="w-full rounded-lg border border-[#e8e8e8] px-4 py-2.5 text-sm text-ink-900 focus:border-gold-500 focus:outline-none"
         />
       </div>
 
       <div className="mt-5">
-        <label className="mb-1.5 block text-sm font-medium text-[#6b7280]">
+        <label
+          htmlFor={`${id}-interest`}
+          className="mb-1.5 block text-sm font-medium text-[#6b7280]"
+        >
           I am interested in&hellip;
         </label>
         <div className="relative">
           <select
             required
+            id={`${id}-interest`}
             name="interest"
             defaultValue=""
             className="w-full appearance-none rounded-lg border border-[#e8e8e8] bg-white px-4 py-2.5 pr-9 text-sm text-ink-900 focus:border-gold-500 focus:outline-none"
@@ -142,18 +173,22 @@ export default function ContactForm() {
       </div>
 
       <div className="mt-5">
-        <label className="mb-1.5 block text-sm font-medium text-[#6b7280]">Message</label>
+        <label htmlFor={`${id}-message`} className="mb-1.5 block text-sm font-medium text-[#6b7280]">
+          Message
+        </label>
         <textarea
           required
+          id={`${id}-message`}
           name="message"
           rows={6}
           className="w-full rounded-lg border border-[#e8e8e8] px-4 py-2.5 text-sm text-ink-900 focus:border-gold-500 focus:outline-none"
         />
       </div>
 
-      <label className="mt-5 flex items-start gap-2.5 text-sm text-[#6b7280]">
+      <label htmlFor={`${id}-agree`} className="mt-5 flex items-start gap-2.5 text-sm text-[#6b7280]">
         <input
           required
+          id={`${id}-agree`}
           type="checkbox"
           className="mt-0.5 h-4 w-4 rounded border-[#e8e8e8] text-ink-900 focus:ring-gold-500"
         />
