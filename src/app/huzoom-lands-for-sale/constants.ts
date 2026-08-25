@@ -11,6 +11,9 @@ export function buildWaLink(message: string) {
 export const DEFAULT_WA_MESSAGE =
   "Hi, I am interested in Huzoom lands for sale. Please share the latest available plots, prices and details.";
 
+export const DEFAULT_WA_MESSAGE_AR =
+  "مرحباً، أنا مهتم بأراضي حزوم المعروضة للبيع. يرجى إرسال أحدث القطع المتاحة والأسعار والتفاصيل.";
+
 export const PLOT_SIZE_OPTIONS = [
   "400 SQM — Standard Villa Plot",
   "480–555 SQM — Medium Residential Plot",
@@ -19,12 +22,28 @@ export const PLOT_SIZE_OPTIONS = [
   "Not sure yet — please advise",
 ] as const;
 
+export const PLOT_SIZE_OPTIONS_AR = [
+  "400 م² — قطعة فيلا قياسية",
+  "480–555 م² — قطعة سكنية متوسطة",
+  "555 م² — زاوية مميزة / شارعين",
+  "800+ م² — قطعة كبيرة / إطلالة بحرية",
+  "غير محدد بعد — يرجى النصح",
+] as const;
+
 export const BUDGET_OPTIONS = [
   "Under QAR 2,000,000",
   "QAR 2,000,000 – 2,500,000",
   "QAR 2,500,000 – 3,500,000",
   "QAR 3,500,000+",
   "Flexible / not sure",
+] as const;
+
+export const BUDGET_OPTIONS_AR = [
+  "أقل من 2,000,000 ريال قطري",
+  "2,000,000 – 2,500,000 ريال قطري",
+  "2,500,000 – 3,500,000 ريال قطري",
+  "أكثر من 3,500,000 ريال قطري",
+  "مرن / غير محدد",
 ] as const;
 
 /** Fires a conversion event only if a tag manager already exists on the page — this

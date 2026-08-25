@@ -130,7 +130,7 @@ body {
 .gold-underline::after {
   content: "";
   position: absolute;
-  left: 0;
+  inset-inline-start: 0;
   bottom: -0.5rem;
   height: 2px;
   width: 3rem;

@@ -1,18 +1,23 @@
-import { DEFAULT_WA_MESSAGE, buildWaLink } from "./constants";
+import { DEFAULT_WA_MESSAGE, DEFAULT_WA_MESSAGE_AR, buildWaLink } from "./constants";
+
+const ARIA_LABEL = {
+  en: "Chat with a Huzoom property advisor on WhatsApp",
+  ar: "تواصل مع مستشار عقارات حزوم عبر واتساب",
+};
 
 // Floating WhatsApp bubble on every breakpoint. Below `lg`, HuzoomMobileBar
 // docks a full-width bar along the bottom edge, so this is lifted above it
 // (bottom-24) to match the same lift pattern WhatsAppButton.tsx uses on
 // off-plan pages rather than hiding — keeps the bubble a consistent, familiar
 // tap target site-wide instead of mobile users losing it entirely.
-export default function HuzoomWhatsAppButton() {
+export default function HuzoomWhatsAppButton({ lang = "en" }: { lang?: "en" | "ar" }) {
   return (
     <a
-      href={buildWaLink(DEFAULT_WA_MESSAGE)}
+      href={buildWaLink(lang === "ar" ? DEFAULT_WA_MESSAGE_AR : DEFAULT_WA_MESSAGE)}
       target="_blank"
       rel="noopener noreferrer"
-      aria-label="Chat with a Huzoom property advisor on WhatsApp"
-      className="fixed bottom-24 right-4 z-40 flex h-12 w-12 items-center justify-center rounded-full text-white shadow-lg shadow-black/25 transition hover:scale-105 sm:right-6 lg:bottom-6 lg:h-14 lg:w-14"
+      aria-label={ARIA_LABEL[lang]}
+      className="fixed bottom-24 end-4 z-40 flex h-12 w-12 items-center justify-center rounded-full text-white shadow-lg shadow-black/25 transition hover:scale-105 sm:end-6 lg:bottom-6 lg:h-14 lg:w-14"
       style={{ background: "linear-gradient(135deg, #c9a24b, #b8923f)" }}
     >
       <svg viewBox="0 0 32 32" className="h-6 w-6 fill-white lg:h-7 lg:w-7">

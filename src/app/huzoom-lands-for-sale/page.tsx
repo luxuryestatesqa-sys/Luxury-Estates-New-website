@@ -18,18 +18,23 @@ import TrustBadges from "@/components/TrustBadges";
 import HuzoomAnnouncementBar from "./HuzoomAnnouncementBar";
 import HuzoomMobileBar from "./HuzoomMobileBar";
 import HuzoomWhatsAppButton from "./HuzoomWhatsAppButton";
+import HuzoomLanguageSwitch from "./HuzoomLanguageSwitch";
 import HuzoomLeadForm from "./HuzoomLeadForm";
 import HuzoomFaq from "./HuzoomFaq";
 import Reveal from "./Reveal";
 import { buildWaLink, DEFAULT_WA_MESSAGE, HUZOOM_PHONE } from "./constants";
 
 const PAGE_URL = `${SITE_URL}/huzoom-lands-for-sale`;
+const PAGE_URL_AR = `${SITE_URL}/huzoom-lands-for-sale/ar`;
 
 export const metadata: Metadata = {
   title: "Land for Sale in Huzoom Lusail, Qatar",
   description:
     "Explore freehold land for sale in Huzoom Lusail, Qatar. View available plot sizes, indicative pricing and investment details. Request the latest availability from our property advisors.",
-  alternates: { canonical: PAGE_URL },
+  alternates: {
+    canonical: PAGE_URL,
+    languages: { en: PAGE_URL, ar: PAGE_URL_AR },
+  },
   openGraph: {
     title: "Land for Sale in Huzoom Lusail, Qatar | Luxury Estates",
     description:
@@ -67,38 +72,38 @@ const PRICING_TABLE = [
   {
     size: "400 sqm",
     type: "Standard Middle Plot (Phase 1 & 2)",
-    priceRange: "QAR 1,900,000 – 2,100,000",
-    rate: "~QAR 4,750 – 5,250 / sqm",
+    priceRange: "QAR 1,850,000",
+    rate: "~QAR 4,625 / sqm",
   },
   {
     size: "400 sqm",
     type: "Prime Corner / Park Attached",
-    priceRange: "QAR 2,088,000 – 2,150,000",
-    rate: "~QAR 5,220 – 5,375 / sqm",
+    priceRange: "QAR 1,950,000",
+    rate: "~QAR 4,875 / sqm",
   },
   {
     size: "480 sqm",
     type: "Garden Attached Plot",
-    priceRange: "QAR 2,250,000 – 2,400,000",
-    rate: "~QAR 4,700 – 5,000 / sqm",
+    priceRange: "QAR 2,065,000 – 2,200,000",
+    rate: "~QAR 4,300 – 4,585 / sqm",
   },
   {
     size: "555 sqm",
     type: "Middle / Main Street Plot",
-    priceRange: "QAR 2,450,000 – 2,700,000",
-    rate: "~QAR 4,400 – 4,860 / sqm",
+    priceRange: "QAR 2,400,000 – 2,650,000",
+    rate: "~QAR 4,325 – 4,775 / sqm",
   },
   {
     size: "555 sqm",
     type: "Prime Corner Plot (Phase 2)",
-    priceRange: "QAR 2,750,000 – 2,800,000",
-    rate: "~QAR 4,950 – 5,045 / sqm",
+    priceRange: "QAR 2,600,000 – 2,900,000",
+    rate: "~QAR 4,685 – 5,225 / sqm",
   },
   {
     size: "800 – 833 sqm",
     type: "Large Villa / Corner Lot",
-    priceRange: "QAR 3,945,000 – 4,100,000",
-    rate: "~QAR 4,735 – 5,125 / sqm",
+    priceRange: "QAR 3,600,000 – 3,900,000",
+    rate: "~QAR 4,320 – 4,875 / sqm",
   },
 ];
 
@@ -146,7 +151,7 @@ const FAQ_ITEMS = [
   },
   {
     q: "What are the prices of Huzoom lands?",
-    a: "Prices currently start from approximately QAR 1.9 million, depending on the plot size, location, position, and availability.",
+    a: "Prices currently start from approximately QAR 1.85 million, depending on the plot size, location, position, and availability.",
   },
   {
     q: "Can I build my own villa on a Huzoom plot?",
@@ -187,6 +192,7 @@ export default function HuzoomLandsPage() {
         id="get-prices"
         className="relative isolate scroll-mt-16 overflow-hidden bg-gradient-to-b from-cream-100 via-cream-50 to-white"
       >
+        <HuzoomLanguageSwitch />
         <div
           aria-hidden
           className="pointer-events-none absolute -left-32 -top-32 h-[26rem] w-[26rem] rounded-full bg-gold-300/25 blur-3xl"
@@ -205,26 +211,23 @@ export default function HuzoomLandsPage() {
               Land for Sale in Huzoom Lusail, Qatar
             </h1>
             <p className="mt-5 max-w-lg text-lg leading-relaxed text-gray-600">
-              Explore available residential plots in Huzoom Lusail — plot sizes, indicative
-              pricing and freehold investment details for qualified buyers.
+              Discover residential plots in Huzoom Lusail with attractive plot sizes, competitive
+              pricing, and freehold ownership opportunities for eligible buyers.
             </p>
 
-            <div className="mt-7 flex flex-wrap gap-2.5">
+            <ul className="mt-6 space-y-2.5">
               {[
-                { icon: Ruler, label: "400 – 800+ sqm plots" },
-                { icon: Gem, label: "QAR 4,700 – 5,200 / sqm" },
-                { icon: ShieldCheck, label: "100% Freehold" },
-                { icon: Compass, label: "Dedicated Advisory" },
-              ].map(({ icon: Icon, label }) => (
-                <span
-                  key={label}
-                  className="flex items-center gap-2 rounded-full border border-gold-200 bg-white px-4 py-2 text-xs font-medium text-ink-800 shadow-sm"
-                >
-                  <Icon className="h-3.5 w-3.5 text-gold-600" strokeWidth={2} />
-                  {label}
-                </span>
+                "Residential plots from 400 sqm to 800+ sqm",
+                "Average rates ~QAR 4,300 – 5,225 per sqm",
+                "100% freehold — open to foreign investors",
+                "Independent advisory — no developer affiliation",
+              ].map((pt) => (
+                <li key={pt} className="flex items-start gap-2.5 text-sm text-gray-700">
+                  <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-gold-500" />
+                  {pt}
+                </li>
               ))}
-            </div>
+            </ul>
 
             <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
               <a
@@ -298,66 +301,42 @@ export default function HuzoomLandsPage() {
           <SectionHeading
             eyebrow="Inventory"
             title="Huzoom Lusail Plot Sizes & Indicative Pricing"
-            subtitle="Available units typically range from 400 sqm to 800+ sqm, with average rates around QAR 4,700 – 5,200 per sqm depending on plot location."
+            subtitle="Available units typically range from 400 sqm to 800+ sqm, with average rates around QAR 4,300 – 5,225 per sqm depending on plot location."
           />
 
-          {/* Desktop/tablet: full table. Below lg, columns don't fit without horizontal
-              scroll, so a stacked card list takes over instead (see below). */}
-          <div className="mt-10 hidden overflow-hidden rounded-2xl border border-gold-200 lg:block">
-            <table className="w-full border-collapse text-left text-sm">
-              <thead>
-                <tr className="border-b border-gold-200 bg-cream-100">
-                  <th className="px-6 py-4 text-xs font-semibold uppercase tracking-wide text-gray-500">
-                    Plot Size
-                  </th>
-                  <th className="px-6 py-4 text-xs font-semibold uppercase tracking-wide text-gray-500">
-                    Unit Type / Location
-                  </th>
-                  <th className="px-6 py-4 text-xs font-semibold uppercase tracking-wide text-gray-500">
-                    Avg. Total Price Range (QAR)
-                  </th>
-                  <th className="px-6 py-4 text-xs font-semibold uppercase tracking-wide text-gray-500">
-                    Avg. Rate per SQM
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {PRICING_TABLE.map((row) => (
-                  <tr key={row.type} className="border-b border-gold-100 last:border-0">
-                    <td className="px-6 py-4 font-serif font-semibold text-ink-900">{row.size}</td>
-                    <td className="px-6 py-4 text-gray-600">{row.type}</td>
-                    <td className="px-6 py-4 text-gray-600">{row.priceRange}</td>
-                    <td className="px-6 py-4 font-medium text-gold-600">{row.rate}</td>
+          {/* One real table at every width — below lg it scrolls horizontally
+              (swipe) inside its bordered frame instead of reflowing into cards. */}
+          <div className="mt-10 overflow-hidden rounded-2xl border border-gold-200">
+            <div className="overflow-x-auto">
+              <table className="w-full min-w-[640px] border-collapse text-left text-sm">
+                <thead>
+                  <tr className="border-b border-gold-200 bg-cream-100">
+                    <th className="px-6 py-4 text-xs font-semibold uppercase tracking-wide text-gray-500">
+                      Plot Size
+                    </th>
+                    <th className="px-6 py-4 text-xs font-semibold uppercase tracking-wide text-gray-500">
+                      Unit Type / Location
+                    </th>
+                    <th className="px-6 py-4 text-xs font-semibold uppercase tracking-wide text-gray-500">
+                      Avg. Total Price Range (QAR)
+                    </th>
+                    <th className="px-6 py-4 text-xs font-semibold uppercase tracking-wide text-gray-500">
+                      Avg. Rate per SQM
+                    </th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-
-          <div className="mt-10 space-y-3 lg:hidden">
-            {PRICING_TABLE.map((row) => (
-              <div
-                key={row.type}
-                className="rounded-2xl border border-gold-200 bg-cream-50 p-5"
-              >
-                <p className="font-serif text-lg font-semibold text-ink-900">{row.size}</p>
-                <p className="text-sm text-gray-600">{row.type}</p>
-                <div className="mt-3 grid grid-cols-2 gap-3 border-t border-gold-100 pt-3">
-                  <div>
-                    <p className="text-[11px] uppercase tracking-wide text-gray-400">
-                      Price Range
-                    </p>
-                    <p className="mt-0.5 text-sm font-medium text-ink-900">{row.priceRange}</p>
-                  </div>
-                  <div>
-                    <p className="text-[11px] uppercase tracking-wide text-gray-400">
-                      Rate / SQM
-                    </p>
-                    <p className="mt-0.5 text-sm font-medium text-gold-600">{row.rate}</p>
-                  </div>
-                </div>
-              </div>
-            ))}
+                </thead>
+                <tbody>
+                  {PRICING_TABLE.map((row) => (
+                    <tr key={row.type} className="border-b border-gold-100 last:border-0">
+                      <td className="px-6 py-4 font-semibold text-ink-900">{row.size}</td>
+                      <td className="px-6 py-4 text-gray-600">{row.type}</td>
+                      <td className="px-6 py-4 text-gray-600">{row.priceRange}</td>
+                      <td className="px-6 py-4 font-medium text-gold-600">{row.rate}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
 
           <p className="mt-6 max-w-3xl text-xs leading-relaxed text-gray-400">

@@ -23,6 +23,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE_URL}/contact`, changeFrequency: "monthly", priority: 0.4 },
     { url: `${SITE_URL}/careers`, changeFrequency: "monthly", priority: 0.3 },
     { url: `${SITE_URL}/huzoom-lands-for-sale`, changeFrequency: "weekly", priority: 0.6 },
+    { url: `${SITE_URL}/huzoom-lands-for-sale/ar`, changeFrequency: "weekly", priority: 0.6 },
     { url: `${SITE_URL}/privacy`, changeFrequency: "yearly", priority: 0.2 },
     { url: `${SITE_URL}/terms`, changeFrequency: "yearly", priority: 0.2 },
     { url: `${SITE_URL}/cookies`, changeFrequency: "yearly", priority: 0.2 },

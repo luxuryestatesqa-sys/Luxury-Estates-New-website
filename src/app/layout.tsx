@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Cormorant_Garamond, Inter, Public_Sans } from "next/font/google";
+import { Amiri, Cormorant_Garamond, Inter, Public_Sans, Tajawal } from "next/font/google";
 import JsonLd from "@/components/JsonLd";
 import ScrollRestoration from "@/components/ScrollRestoration";
 import { SITE_URL } from "@/lib/site";
@@ -65,7 +65,7 @@ const cormorantGaramond = Cormorant_Garamond({
 
 const inter = Inter({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["400", "500", "600", "700", "800"],
   variable: "--font-inter",
   display: "swap",
 });
@@ -76,6 +76,23 @@ const publicSans = Public_Sans({
   subsets: ["latin"],
   weight: ["400", "500", "600"],
   variable: "--font-public-sans",
+  display: "swap",
+});
+
+// Arabic-supporting pair for the Huzoom Lusail bilingual landing page only —
+// Amiri (elegant serif) mirrors Cormorant's role for headings, Tajawal
+// (clean grotesque) mirrors Inter's role for body copy. Unused elsewhere.
+const amiri = Amiri({
+  subsets: ["arabic"],
+  weight: ["400", "700"],
+  variable: "--font-amiri",
+  display: "swap",
+});
+
+const tajawal = Tajawal({
+  subsets: ["arabic"],
+  weight: ["400", "500", "700", "800"],
+  variable: "--font-tajawal",
   display: "swap",
 });
 
@@ -107,7 +124,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`h-full antialiased ${cormorantGaramond.variable} ${inter.variable} ${publicSans.variable}`}
+      className={`h-full antialiased ${cormorantGaramond.variable} ${inter.variable} ${publicSans.variable} ${amiri.variable} ${tajawal.variable}`}
     >
       <body className="min-h-full flex flex-col bg-cream-50 text-ink-900">
         <JsonLd data={organizationJsonLd} />

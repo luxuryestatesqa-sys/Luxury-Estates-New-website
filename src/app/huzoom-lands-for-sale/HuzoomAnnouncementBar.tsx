@@ -1,10 +1,13 @@
-const MESSAGE = "🚨 HIGH-DEMAND HUZOOM PLOTS — LIMITED AVAILABILITY";
+const MESSAGE = {
+  en: "🚨 HIGH-DEMAND HUZOOM PLOTS — LIMITED AVAILABILITY",
+  ar: "🚨 قطع حزوم عالية الطلب — كمية محدودة",
+};
 
-// Doubled for a seamless looping marquee (same technique as TrustedBy.tsx).
-const base = Array(4).fill(MESSAGE);
-const items = [...base, ...base];
+export default function HuzoomAnnouncementBar({ lang = "en" }: { lang?: "en" | "ar" }) {
+  // Doubled for a seamless looping marquee (same technique as TrustedBy.tsx).
+  const base = Array(4).fill(MESSAGE[lang]);
+  const items = [...base, ...base];
 
-export default function HuzoomAnnouncementBar() {
   return (
     <div className="group overflow-hidden bg-ink-950">
       <div className="flex w-max animate-marquee items-center gap-10 py-2.5 group-hover:[animation-play-state:paused]">
