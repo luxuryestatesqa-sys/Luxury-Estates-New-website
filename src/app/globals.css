@@ -144,6 +144,75 @@ body {
   color: transparent;
 }
 
+/*
+ * Header transparent/solid look, keyed off #site-header[data-mode] instead
+ * of per-element Tailwind ternaries. The mode is set both by React
+ * (transparent state) and, before hydration, by an inline script in
+ * Header.tsx that reads the real browser location — needed because this
+ * app's ISR regeneration re-renders the shared layout without a reliable
+ * per-route pathname, so usePathname() can't be trusted for the header's
+ * server-rendered class on "/".
+ */
+#site-header {
+  background-color: rgb(255 255 255 / 0.95);
+  border-color: #f3f4f6;
+  backdrop-filter: blur(8px);
+}
+#site-header[data-mode="transparent"] {
+  background-color: transparent;
+  border-color: rgb(255 255 255 / 0.25);
+  backdrop-filter: none;
+}
+
+#site-header .hdr-tint {
+  color: var(--color-ink-900);
+}
+#site-header[data-mode="transparent"] .hdr-tint {
+  color: #fff;
+}
+
+#site-header .hdr-accent {
+  background: linear-gradient(90deg, #f3e7c9, #c9a24b 45%, #96762f 90%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+#site-header[data-mode="transparent"] .hdr-accent {
+  background: none;
+  -webkit-background-clip: unset;
+  background-clip: unset;
+  color: #fff;
+}
+
+#site-header .hdr-link {
+  color: var(--color-ink-700);
+}
+#site-header .hdr-link:hover {
+  color: var(--color-gold-500);
+}
+#site-header[data-mode="transparent"] .hdr-link {
+  color: rgb(255 255 255 / 0.9);
+}
+#site-header[data-mode="transparent"] .hdr-link:hover {
+  color: #fff;
+}
+#site-header .hdr-link.hdr-link-active {
+  color: var(--color-gold-500);
+}
+
+#site-header .hdr-icon {
+  color: var(--color-ink-600);
+}
+#site-header .hdr-icon:hover {
+  color: var(--color-gold-500);
+}
+#site-header[data-mode="transparent"] .hdr-icon {
+  color: rgb(255 255 255 / 0.8);
+}
+#site-header[data-mode="transparent"] .hdr-icon:hover {
+  color: #fff;
+}
+
 @keyframes fade-up {
   from {
     opacity: 0;

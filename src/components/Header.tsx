@@ -15,6 +15,25 @@ const navLinks = [
   { href: "/contact", label: "Contact" },
 ];
 
+// Runs during HTML parsing, before hydration, so a hard load of "/" doesn't
+// flash the opaque header. usePathname() can't be trusted for the header's
+// server-rendered className: this app's ISR regeneration re-renders the
+// shared (site) layout without a real per-route pathname, so the header
+// keeps getting baked back into its non-home look even on "/". Reading the
+// real location here sidesteps that entirely — see [data-mode] rules in
+// globals.css for the styling this attribute drives.
+const FIX_HOME_HEADER_SCRIPT = `(function(){try{var h=document.getElementById("site-header");if(h&&location.pathname==="/"&&window.scrollY<=40)h.setAttribute("data-mode","transparent")}catch(e){}})()`;
+
+function InlineScript({ html }: { html: string }) {
+  return (
+    <script
+      type={typeof window === "undefined" ? "text/javascript" : "text/plain"}
+      suppressHydrationWarning
+      dangerouslySetInnerHTML={{ __html: html }}
+    />
+  );
+}
+
 export default function Header() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -42,12 +61,12 @@ export default function Header() {
 
   return (
     <header
-      className={`sticky top-0 z-50 border-b transition-colors duration-300 ${
-        transparent
-          ? "border-white/25 bg-transparent"
-          : "border-gray-100 bg-white/95 backdrop-blur"
-      }`}
+      id="site-header"
+      data-mode={transparent ? "transparent" : "solid"}
+      suppressHydrationWarning
+      className="sticky top-0 z-50 border-b transition-colors duration-300"
     >
+      <InlineScript html={FIX_HOME_HEADER_SCRIPT} />
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-4 lg:grid lg:grid-cols-[1fr_auto_1fr] lg:px-8">
         <Link href="/" className="flex items-center justify-self-start gap-2.5" onClick={() => setOpen(false)}>
           <Image
@@ -58,13 +77,8 @@ export default function Header() {
             priority
             className="h-9 w-9 shrink-0 object-contain"
           />
-          <span
-            className={`font-serif text-xl font-semibold tracking-wide ${
-              transparent ? "text-white" : "text-ink-900"
-            }`}
-          >
-            Luxury{" "}
-            <span className={transparent ? "text-white" : "text-gradient-gold"}>Estates</span>
+          <span className="hdr-tint font-serif text-xl font-semibold tracking-wide">
+            Luxury <span className="hdr-accent">Estates</span>
           </span>
         </Link>
 
@@ -73,12 +87,8 @@ export default function Header() {
             <Link
               key={link.label}
               href={link.href}
-              className={`text-sm font-semibold uppercase tracking-[0.08em] transition hover:text-gold-500 ${
-                pathname === link.href
-                  ? "text-gold-500"
-                  : transparent
-                    ? "text-white/90 hover:text-white"
-                    : "text-ink-700"
+              className={`hdr-link text-sm font-semibold uppercase tracking-[0.08em] transition ${
+                pathname === link.href ? "hdr-link-active" : ""
               }`}
             >
               {link.label}
@@ -95,9 +105,7 @@ export default function Header() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={social.label}
-                className={`transition ${
-                  transparent ? "text-white/80 hover:text-white" : "text-ink-600 hover:text-gold-500"
-                }`}
+                className="hdr-icon transition"
               >
                 <social.icon className="h-4 w-4" />
               </a>
@@ -107,14 +115,10 @@ export default function Header() {
           <button
             type="button"
             aria-label="Toggle menu"
-            className="lg:hidden"
+            className="hdr-icon lg:hidden"
             onClick={() => setOpen((v) => !v)}
           >
-            {open ? (
-              <X className={`h-6 w-6 ${transparent ? "text-white" : "text-ink-900"}`} />
-            ) : (
-              <Menu className={`h-6 w-6 ${transparent ? "text-white" : "text-ink-900"}`} />
-            )}
+            {open ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </button>
         </div>
       </div>
