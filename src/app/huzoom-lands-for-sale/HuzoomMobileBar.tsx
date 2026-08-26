@@ -1,3 +1,5 @@
+"use client";
+
 import { DEFAULT_WA_MESSAGE, DEFAULT_WA_MESSAGE_AR, buildWaLink } from "./constants";
 
 const TEXT = {
@@ -15,6 +17,12 @@ export default function HuzoomMobileBar({ lang = "en" }: { lang?: "en" | "ar" })
         href={buildWaLink(lang === "ar" ? DEFAULT_WA_MESSAGE_AR : DEFAULT_WA_MESSAGE)}
         target="_blank"
         rel="noopener noreferrer"
+        onClick={() =>
+          window.gtag("event", "whatsapp_click", {
+            event_category: "engagement",
+            event_label: "huzoom_landing_page",
+          })
+        }
         className="flex flex-1 items-center justify-center gap-2 rounded-full border border-gray-200 text-sm font-semibold text-ink-900"
       >
         <svg viewBox="0 0 32 32" className="h-4 w-4 fill-current text-[#25D366]">

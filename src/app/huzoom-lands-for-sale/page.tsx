@@ -22,6 +22,7 @@ import HuzoomLanguageSwitch from "./HuzoomLanguageSwitch";
 import HuzoomLeadForm from "./HuzoomLeadForm";
 import HuzoomFaq from "./HuzoomFaq";
 import Reveal from "./Reveal";
+import TrackedWhatsAppLink from "./TrackedWhatsAppLink";
 import { buildWaLink, DEFAULT_WA_MESSAGE, HUZOOM_PHONE } from "./constants";
 
 const PAGE_URL = `${SITE_URL}/huzoom-lands-for-sale`;
@@ -230,14 +231,12 @@ export default function HuzoomLandsPage() {
             </ul>
 
             <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
-              <a
+              <TrackedWhatsAppLink
                 href={buildWaLink(DEFAULT_WA_MESSAGE)}
-                target="_blank"
-                rel="noopener noreferrer"
                 className="rounded-full bg-gold-500 px-7 py-3.5 text-center text-sm font-semibold uppercase tracking-wide text-ink-950 transition duration-200 hover:scale-[1.03] hover:bg-gold-600 active:scale-[0.98] sm:w-auto"
               >
                 WhatsApp Us
-              </a>
+              </TrackedWhatsAppLink>
               <a
                 href={`tel:${HUZOOM_PHONE}`}
                 className="rounded-full border border-gray-300 px-7 py-3.5 text-center text-sm font-semibold uppercase tracking-wide text-ink-900 transition hover:border-ink-900 sm:w-auto"
@@ -345,16 +344,14 @@ export default function HuzoomLandsPage() {
             conditions. Submit an enquiry for up-to-date pricing on available units.
           </p>
 
-          <a
+          <TrackedWhatsAppLink
             href={buildWaLink(
               "Hi, I'd like up-to-date pricing on available Huzoom plots. Please share the latest rates.",
             )}
-            target="_blank"
-            rel="noopener noreferrer"
             className="mt-6 flex items-center justify-center rounded-full bg-ink-900 px-7 py-3.5 text-sm font-semibold uppercase tracking-wide text-white transition duration-200 hover:scale-[1.03] hover:bg-gold-500 hover:text-ink-950 active:scale-[0.98] sm:inline-flex"
           >
             Enquire About Pricing
-          </a>
+          </TrackedWhatsAppLink>
         </Reveal>
       </section>
 
@@ -495,16 +492,14 @@ export default function HuzoomLandsPage() {
                   Exact road access, distances and nearby landmarks confirmed by our advisor
                 </li>
               </ul>
-              <a
+              <TrackedWhatsAppLink
                 href={buildWaLink(
                   "Hi, could you share detailed location information for Huzoom plots?",
                 )}
-                target="_blank"
-                rel="noopener noreferrer"
                 className="mt-8 flex items-center justify-center rounded-full bg-ink-900 px-7 py-3.5 text-sm font-semibold uppercase tracking-wide text-white transition duration-200 hover:scale-[1.03] hover:bg-gold-500 hover:text-ink-950 active:scale-[0.98] sm:inline-flex"
               >
                 Get Location Details
-              </a>
+              </TrackedWhatsAppLink>
             </div>
           </div>
         </Reveal>
@@ -573,16 +568,14 @@ export default function HuzoomLandsPage() {
               >
                 Get Huzoom Prices
               </a>
-              <a
+              <TrackedWhatsAppLink
                 href={buildWaLink(
                   "Hi, I am interested in Huzoom lands for sale. Please share the latest available plots, prices and details.",
                 )}
-                target="_blank"
-                rel="noopener noreferrer"
                 className="rounded-full border border-gray-300 px-7 py-3.5 text-center text-sm font-semibold uppercase tracking-wide text-ink-900 transition hover:border-ink-900 sm:w-auto"
               >
                 WhatsApp an Advisor
-              </a>
+              </TrackedWhatsAppLink>
             </div>
           </div>
           <div id="final-form" className="scroll-mt-24 space-y-4">

@@ -46,14 +46,11 @@ export const BUDGET_OPTIONS_AR = [
   "مرن / غير محدد",
 ] as const;
 
-/** Fires a conversion event only if a tag manager already exists on the page — this
- *  page adds no analytics script of its own, matching the site's no-analytics-cookies policy. */
-export function trackHuzoomEvent(name: string, params?: Record<string, unknown>) {
-  if (typeof window === "undefined") return;
-  const w = window as unknown as {
-    gtag?: (...args: unknown[]) => void;
-    dataLayer?: unknown[];
-  };
-  if (typeof w.gtag === "function") w.gtag("event", name, params);
-  else if (Array.isArray(w.dataLayer)) w.dataLayer.push({ event: name, ...params });
+// Ambient type only — no new tracking/init logic. Needed so the direct
+// window.gtag(...) calls added for whatsapp_click/form_submit tracking
+// type-check; gtag.js is already loaded site-wide (see src/app/layout.tsx).
+declare global {
+  interface Window {
+    gtag: (...args: unknown[]) => void;
+  }
 }
