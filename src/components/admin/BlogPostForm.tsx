@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import SingleImageField from "./SingleImageField";
+import MarkdownField from "./MarkdownField";
 import { Badge, Card, FormSection } from "./ui";
 
 export interface BlogPostFormValues {
@@ -105,9 +106,7 @@ export default function BlogPostForm({ initial }: { initial?: BlogPostFormValues
           <Field label="Excerpt (shown on the blog list)">
             <textarea rows={2} value={values.excerpt} onChange={(e) => set("excerpt", e.target.value)} className={inputClass} />
           </Field>
-          <Field label="Content (Markdown supported)">
-            <textarea rows={14} value={values.content} onChange={(e) => set("content", e.target.value)} className={`${inputClass} font-mono`} />
-          </Field>
+          <MarkdownField label="Content" value={values.content} onChange={(v) => set("content", v)} rows={14} />
         </FormSection>
 
         <FormSection title="Cover Image">
