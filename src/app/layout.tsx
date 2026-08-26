@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
 import { Amiri, Cormorant_Garamond, Inter, Public_Sans, Tajawal } from "next/font/google";
+import Script from "next/script";
 import JsonLd from "@/components/JsonLd";
 import ScrollRestoration from "@/components/ScrollRestoration";
 import { SITE_URL } from "@/lib/site";
 import "./globals.css";
+
+const GOOGLE_ADS_TAG_ID = "G-QGX6BXFMVT";
 
 const organizationJsonLd = {
   "@context": "https://schema.org",
@@ -132,6 +135,18 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <JsonLd data={siteNavigationJsonLd} />
         <ScrollRestoration />
         {children}
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${GOOGLE_ADS_TAG_ID}`}
+          strategy="afterInteractive"
+        />
+        <Script id="google-tag" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${GOOGLE_ADS_TAG_ID}');
+          `}
+        </Script>
       </body>
     </html>
   );
