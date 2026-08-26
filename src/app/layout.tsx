@@ -6,7 +6,7 @@ import ScrollRestoration from "@/components/ScrollRestoration";
 import { SITE_URL } from "@/lib/site";
 import "./globals.css";
 
-const GOOGLE_ADS_TAG_ID = "G-QGX6BXFMVT";
+const GOOGLE_ADS_TAG_ID = "G-Y0QX3VGZ3Q";
 
 const organizationJsonLd = {
   "@context": "https://schema.org",
