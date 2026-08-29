@@ -1,6 +1,6 @@
 "use client";
 
-import { DEFAULT_WA_MESSAGE, DEFAULT_WA_MESSAGE_AR, buildWaLink } from "./constants";
+import { DEFAULT_WA_MESSAGE, DEFAULT_WA_MESSAGE_AR, buildWaLink, trackWhatsAppClick } from "./constants";
 
 const ARIA_LABEL = {
   en: "Chat with a Huzoom property advisor on WhatsApp",
@@ -19,12 +19,7 @@ export default function HuzoomWhatsAppButton({ lang = "en" }: { lang?: "en" | "a
       target="_blank"
       rel="noopener noreferrer"
       aria-label={ARIA_LABEL[lang]}
-      onClick={() =>
-        window.gtag("event", "whatsapp_click", {
-          event_category: "engagement",
-          event_label: "huzoom_landing_page",
-        })
-      }
+      onClick={trackWhatsAppClick}
       className="fixed bottom-24 end-4 z-40 flex h-12 w-12 items-center justify-center rounded-full text-white shadow-lg shadow-black/25 transition hover:scale-105 sm:end-6 lg:bottom-6 lg:h-14 lg:w-14"
       style={{ background: "linear-gradient(135deg, #c9a24b, #b8923f)" }}
     >

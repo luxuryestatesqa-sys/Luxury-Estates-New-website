@@ -9,6 +9,7 @@ import {
   PLOT_SIZE_OPTIONS,
   PLOT_SIZE_OPTIONS_AR,
   buildWaLink,
+  trackWhatsAppClick,
 } from "./constants";
 
 const PHONE_PATTERN = /^[+\d][\d\s-]{6,17}$/;
@@ -148,12 +149,7 @@ export default function HuzoomLeadForm({
           href={waUrl}
           target="_blank"
           rel="noopener noreferrer"
-          onClick={() =>
-            window.gtag("event", "whatsapp_click", {
-              event_category: "engagement",
-              event_label: "huzoom_landing_page",
-            })
-          }
+          onClick={trackWhatsAppClick}
           className="mt-5 inline-flex w-full items-center justify-center rounded-full bg-ink-900 px-6 py-3 text-sm font-semibold uppercase tracking-wide text-white transition hover:bg-gold-500 hover:text-ink-950 sm:w-auto"
         >
           {t.continueWa}

@@ -6,7 +6,12 @@ import ScrollRestoration from "@/components/ScrollRestoration";
 import { SITE_URL } from "@/lib/site";
 import "./globals.css";
 
-const GOOGLE_ADS_TAG_ID = "G-Y0QX3VGZ3Q";
+const GA4_MEASUREMENT_ID = "G-Y0QX3VGZ3Q";
+// Separate Google Ads account tag, needed for conversion actions like the
+// Huzoom WhatsApp-click conversion (see huzoom-lands-for-sale/constants.ts)
+// to attribute to ad clicks. Coexists with the GA4 tag via a second
+// gtag('config', ...) call on the one shared gtag.js load below.
+const GOOGLE_ADS_TAG_ID = "G-QGX6BXFMVT";
 
 const organizationJsonLd = {
   "@context": "https://schema.org",
@@ -136,7 +141,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <ScrollRestoration />
         {children}
         <Script
-          src={`https://www.googletagmanager.com/gtag/js?id=${GOOGLE_ADS_TAG_ID}`}
+          src={`https://www.googletagmanager.com/gtag/js?id=${GA4_MEASUREMENT_ID}`}
           strategy="afterInteractive"
         />
         <Script id="google-tag" strategy="afterInteractive">
@@ -144,6 +149,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
+            gtag('config', '${GA4_MEASUREMENT_ID}');
             gtag('config', '${GOOGLE_ADS_TAG_ID}');
           `}
         </Script>

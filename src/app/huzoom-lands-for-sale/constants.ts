@@ -54,3 +54,17 @@ declare global {
     gtag: (...args: unknown[]) => void;
   }
 }
+
+// Fires on every WhatsApp CTA on this landing page: the GA4 engagement
+// event plus the Google Ads "Huzoom - Whatsapp Clicks" conversion
+// (AW-17479160061/QONQCMbP-ukcEP2h245B), so ad spend can attribute to
+// these clicks. Kept here instead of duplicated per component.
+export function trackWhatsAppClick() {
+  window.gtag("event", "whatsapp_click", {
+    event_category: "engagement",
+    event_label: "huzoom_landing_page",
+  });
+  window.gtag("event", "conversion", {
+    send_to: "AW-17479160061/QONQCMbP-ukcEP2h245B",
+  });
+}
