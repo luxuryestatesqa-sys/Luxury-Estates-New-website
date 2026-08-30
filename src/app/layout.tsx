@@ -110,12 +110,12 @@ const description =
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.luxuryestates.qa"),
   title: {
-    default: "Luxury Estates | Fine Properties in Qatar",
+    default: "Luxury Estates | Find Properties in Qatar",
     template: "%s | Luxury Estates",
   },
   description,
   openGraph: {
-    title: "Luxury Estates | Fine Properties in Qatar",
+    title: "Luxury Estates | Find Properties in Qatar",
     description,
     siteName: "Luxury Estates",
     locale: "en_QA",
@@ -123,7 +123,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Luxury Estates | Fine Properties in Qatar",
+    title: "Luxury Estates | Find Properties in Qatar",
     description,
   },
 };

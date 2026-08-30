@@ -12,7 +12,6 @@ import CtaSection from "@/components/CtaSection";
 import { SITE_URL } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Luxury Estates | Fine Properties in Qatar",
   description:
     "Luxury Estates connects discerning buyers, tenants and investors with Qatar's finest apartments, villas and commercial properties in Doha, Lusail and The Pearl.",
   alternates: { canonical: SITE_URL },

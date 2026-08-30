@@ -53,7 +53,7 @@ export default function OpengraphImage() {
             textTransform: "uppercase",
           }}
         >
-          Fine Properties in Qatar
+          Find Properties in Qatar
         </div>
       </div>
     ),
