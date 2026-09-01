@@ -53,8 +53,8 @@ export default function TermsPage() {
         <section>
           <h2 className="font-serif text-lg font-semibold text-ink-900">Intellectual property</h2>
           <p className="mt-2">
-            The Luxury Estates name, logo, photography and site content belong to Luxury Estates
-            W.L.L. or its licensors. You may view and share pages for personal, non-commercial
+            The Luxury Estates name, logo, photography and site content belong to LUXURY ESTATES
+            REAL ESTATE or its licensors. You may view and share pages for personal, non-commercial
             use, but may not reproduce or redistribute site content without our permission.
           </p>
         </section>

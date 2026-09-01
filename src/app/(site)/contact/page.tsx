@@ -104,7 +104,7 @@ export default function ContactPage() {
                 <div>
                   <p className="font-semibold text-ink-900">Visit Us</p>
                   <p className="text-sm text-[#6b7280]">
-                    Building No 11, Street No. 339, Zone 69, Marina 25, Lusail, Qatar
+                    Building 3, Street 318, Zone 69, Floor 23, Doha, Qatar
                   </p>
                 </div>
               </div>
@@ -113,6 +113,10 @@ export default function ContactPage() {
             <div className="mt-6">
               <OfficeMap />
             </div>
+
+            <p className="mt-6 text-xs leading-relaxed text-[#6b7280]">
+              LUXURY ESTATES REAL ESTATE &middot; MoJ Real Estate Brokerage License No: 706
+            </p>
           </div>
         </div>
       </section>

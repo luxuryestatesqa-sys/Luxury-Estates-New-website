@@ -59,7 +59,7 @@ export default function AdminLoginPage() {
             every lead coming in from the site — all in one place.
           </p>
         </div>
-        <p className="text-xs text-white/30">&copy; {new Date().getFullYear()} Luxury Estates W.L.L.</p>
+        <p className="text-xs text-white/30">&copy; {new Date().getFullYear()} LUXURY ESTATES REAL ESTATE</p>
       </div>
 
       <div className="flex flex-1 items-center justify-center bg-cream-100 px-6">

@@ -131,8 +131,15 @@ export default function Footer() {
           </div>
 
           <p className="text-sm text-white/40">
-            &copy; {new Date().getFullYear()} Luxury Estates W.L.L. All rights reserved.
+            &copy; {new Date().getFullYear()} LUXURY ESTATES REAL ESTATE. All rights reserved.
           </p>
+        </div>
+
+        <div className="mt-6 flex flex-col items-center gap-1.5 text-center text-xs leading-relaxed text-white/40">
+          <p>
+            LUXURY ESTATES REAL ESTATE &middot; Building 3, Street 318, Zone 69, Floor 23, Doha, Qatar
+          </p>
+          <p>MoJ Real Estate Brokerage License No: 706</p>
         </div>
 
         <div className="mt-8 flex flex-col items-center gap-4 border-t border-white/10 py-6 text-center md:flex-row md:items-center md:justify-between md:text-left">

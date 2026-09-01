@@ -26,7 +26,7 @@ export default function PrivacyPage() {
         <section>
           <h2 className="font-serif text-lg font-semibold text-ink-900">Who we are</h2>
           <p className="mt-2">
-            Luxury Estates W.L.L., Building No 11, Street No. 339, Zone 69, Marina 25, Lusail,
+            LUXURY ESTATES REAL ESTATE, Building 3, Street 318, Zone 69, Floor 23, Doha,
             Qatar. You can reach us at{" "}
             <a href="mailto:info@luxuryestates.qa" className="text-gold-600 hover:underline">
               info@luxuryestates.qa

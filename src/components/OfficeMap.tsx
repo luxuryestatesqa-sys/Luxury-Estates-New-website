@@ -4,10 +4,12 @@ import { GoogleMap, OverlayView, useJsApiLoader } from "@react-google-maps/api";
 
 const GOOGLE_MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? "";
 
-// Lusail Marina district centroid — the office address (Marina 25) doesn't
-// have a verified precise geocode on file, so this centers the map on the
+// Doha (Zone 69) district centroid — the office moved to Building 3,
+// Street 318, Zone 69, Doha and this exact building doesn't have a
+// verified precise geocode on file yet, so this centers the map on the
 // right district rather than guessing exact building coordinates.
-const OFFICE_POSITION = { lat: 25.4213, lng: 51.5038 };
+// TODO: replace with the exact building coordinates once available.
+const OFFICE_POSITION = { lat: 25.2854, lng: 51.531 };
 
 const mapContainerStyle = { width: "100%", height: "100%" };
 
@@ -37,7 +39,7 @@ export default function OfficeMap() {
   if (!GOOGLE_MAPS_API_KEY || loadError) {
     return (
       <div className="flex aspect-video w-full items-center justify-center rounded-xl border border-[#e8e8e8] bg-[#f3f3f3]">
-        <span className="text-xs text-[#6b7280]">Marina 25, Lusail</span>
+        <span className="text-xs text-[#6b7280]">Zone 69, Doha</span>
       </div>
     );
   }
