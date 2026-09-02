@@ -4,6 +4,13 @@ import { supabasePublic } from "@/lib/supabase/public";
 import { sanitizeWhatsapp } from "@/lib/format";
 import type { Agent } from "./types";
 
+// Admin saves invalidate this tag instantly via /api/revalidate, so this
+// time-based window is only a safety net (matches the page-level
+// `revalidate = 3600` safety net on routes that read agent data) — it was
+// previously 300s, causing needless cache rewrites (billed as ISR/Data
+// Cache writes) between admin edits.
+const DATA_CACHE_REVALIDATE = 3600;
+
 interface AgentRow {
   id: string;
   slug: string;
@@ -54,7 +61,7 @@ async function fetchAgents(): Promise<Agent[]> {
   return (data ?? []).map(mapAgent);
 }
 export const getAgents = unstable_cache(fetchAgents, ["agents:all"], {
-  revalidate: 300,
+  revalidate: DATA_CACHE_REVALIDATE,
   tags: ["agents"],
 });
 
@@ -68,7 +75,7 @@ async function fetchAgentBySlug(slug: string): Promise<Agent | undefined> {
   return data ? mapAgent(data) : undefined;
 }
 export const getAgentBySlug = unstable_cache(fetchAgentBySlug, ["agents:bySlug"], {
-  revalidate: 300,
+  revalidate: DATA_CACHE_REVALIDATE,
   tags: ["agents"],
 });
 

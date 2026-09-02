@@ -10,6 +10,17 @@ import type { AgentSummary, ListingStatus, Property, PropertyType } from "./type
 // (and thus be fast) instead of hitting the database on every request.
 const CACHE_TAGS = { properties: "properties" };
 
+// Admin saves invalidate this tag instantly via /api/revalidate, so this
+// window only needs to be short enough to pick up the Property Finder sync
+// (runs at most every 12h) — it isn't the freshness mechanism for anything
+// else. It previously sat at 60s, which meant every distinct cache key here
+// (e.g. one per property slug) rewrote itself up to once a minute under
+// traffic; each rewrite bills as a Vercel Data/ISR cache write, and across
+// 1300+ properties that's what actually drove ISR Writes to 3x the plan
+// limit. 1h keeps sync latency well under 12h while cutting write volume
+// by ~60x.
+const DATA_CACHE_REVALIDATE = 3600;
+
 const AGENT_SELECT = "id,slug,name,title,photo,phone,whatsapp,email";
 const PROPERTY_SELECT = `*, agent:agents(${AGENT_SELECT})`;
 
@@ -182,7 +193,7 @@ async function fetchPropertiesForListing(): Promise<Property[]> {
 export const getPropertiesForListing = unstable_cache(
   fetchPropertiesForListing,
   ["properties:listing"],
-  { revalidate: 60, tags: [CACHE_TAGS.properties] },
+  { revalidate: DATA_CACHE_REVALIDATE, tags: [CACHE_TAGS.properties] },
 );
 
 async function fetchPropertiesCount(): Promise<number> {
@@ -193,7 +204,7 @@ async function fetchPropertiesCount(): Promise<number> {
   return count ?? 0;
 }
 export const getPropertiesCount = unstable_cache(fetchPropertiesCount, ["properties:count"], {
-  revalidate: 60,
+  revalidate: DATA_CACHE_REVALIDATE,
   tags: [CACHE_TAGS.properties],
 });
 
@@ -214,7 +225,7 @@ async function fetchFillerProperties(excludeIds: string[], limit: number): Promi
   return (data as PropertyRow[] | null ?? []).map(mapProperty);
 }
 export const getFillerProperties = unstable_cache(fetchFillerProperties, ["properties:filler"], {
-  revalidate: 60,
+  revalidate: DATA_CACHE_REVALIDATE,
   tags: [CACHE_TAGS.properties],
 });
 
@@ -228,7 +239,7 @@ async function fetchPropertyBySlug(slug: string): Promise<Property | undefined> 
   return data ? mapProperty(data) : undefined;
 }
 export const getPropertyBySlug = unstable_cache(fetchPropertyBySlug, ["properties:bySlug"], {
-  revalidate: 60,
+  revalidate: DATA_CACHE_REVALIDATE,
   tags: [CACHE_TAGS.properties],
 });
 
@@ -262,7 +273,7 @@ async function fetchRelatedProperties(
   return (anyOther ?? []).map(mapProperty);
 }
 export const getRelatedProperties = unstable_cache(fetchRelatedProperties, ["properties:related"], {
-  revalidate: 60,
+  revalidate: DATA_CACHE_REVALIDATE,
   tags: [CACHE_TAGS.properties],
 });
 
@@ -285,7 +296,7 @@ async function fetchFeaturedProperties(): Promise<Property[]> {
   return rows.map(mapProperty);
 }
 export const getFeaturedProperties = unstable_cache(fetchFeaturedProperties, ["properties:featured"], {
-  revalidate: 60,
+  revalidate: DATA_CACHE_REVALIDATE,
   tags: [CACHE_TAGS.properties],
 });
 
@@ -308,7 +319,34 @@ async function fetchPropertiesByAgentId(agentId: string): Promise<Property[]> {
   return rows.map(mapProperty);
 }
 export const getPropertiesByAgentId = unstable_cache(fetchPropertiesByAgentId, ["properties:byAgentId"], {
-  revalidate: 60,
+  revalidate: DATA_CACHE_REVALIDATE,
+  tags: [CACHE_TAGS.properties],
+});
+
+// Listings-per-agent counts (e.g. the /agents directory) only need the
+// agent_id column, not the full ~6MB properties payload that getProperties()
+// pulls (title, description, amenities, every image) — this fetches just
+// the one column so the query and the cached payload both stay tiny.
+async function fetchListingCountsByAgent(): Promise<Record<string, number>> {
+  const counts: Record<string, number> = {};
+  let from = 0;
+  for (;;) {
+    const { data, error } = await supabasePublic
+      .from("properties")
+      .select("agent_id")
+      .range(from, from + PAGE_SIZE - 1);
+    if (error) throw error;
+    const page = (data ?? []) as { agent_id: string | null }[];
+    for (const row of page) {
+      if (row.agent_id) counts[row.agent_id] = (counts[row.agent_id] ?? 0) + 1;
+    }
+    if (page.length < PAGE_SIZE) break;
+    from += PAGE_SIZE;
+  }
+  return counts;
+}
+export const getListingCountsByAgent = unstable_cache(fetchListingCountsByAgent, ["properties:listingCountsByAgent"], {
+  revalidate: DATA_CACHE_REVALIDATE,
   tags: [CACHE_TAGS.properties],
 });
 
@@ -317,7 +355,7 @@ async function fetchAreaNames(): Promise<string[]> {
   return Array.from(new Set(all.map((p) => p.area))).sort();
 }
 export const getAreaNames = unstable_cache(fetchAreaNames, ["properties:areaNames"], {
-  revalidate: 60,
+  revalidate: DATA_CACHE_REVALIDATE,
   tags: [CACHE_TAGS.properties],
 });
 
@@ -369,6 +407,6 @@ async function fetchFeaturedAreas(picks: AreaPick[]): Promise<FeaturedArea[]> {
   return results.filter((a) => a.image && a.count > 0);
 }
 export const getFeaturedAreas = unstable_cache(fetchFeaturedAreas, ["properties:featuredAreas"], {
-  revalidate: 60,
+  revalidate: DATA_CACHE_REVALIDATE,
   tags: [CACHE_TAGS.properties],
 });

@@ -5,6 +5,15 @@ import { getAgents } from "@/data/agents";
 import { getPublishedBlogPosts } from "@/data/blog";
 import { SITE_URL } from "@/lib/site";
 
+// Next takes the lowest revalidate value across a route and everything it
+// reads, so this route's effective freshness is already floored at 1h by
+// the unstable_cache calls in getOffPlanProjects/getAgents/getPublishedBlogPosts
+// (see DATA_CACHE_REVALIDATE in src/data/*.ts) — this export just documents
+// that ceiling and future-proofs it if those ever move higher. getProperties()
+// isn't cached at all (see its comment in src/data/properties.ts) so it
+// contributes no signal either way.
+export const revalidate = 21600;
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const [properties, offPlanProjects, agents, posts] = await Promise.all([
     getProperties(),

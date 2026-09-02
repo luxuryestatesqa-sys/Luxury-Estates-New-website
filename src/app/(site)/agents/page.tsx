@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getAgents } from "@/data/agents";
-import { getProperties } from "@/data/properties";
+import { getListingCountsByAgent } from "@/data/properties";
 import AgentsExplorer from "@/components/AgentsExplorer";
 import AgentsCTA from "@/components/AgentsCTA";
 import LeadershipSpotlight from "@/components/LeadershipSpotlight";
@@ -18,14 +18,10 @@ export const metadata: Metadata = {
 export const revalidate = 3600;
 
 export default async function AgentsPage() {
-  const [agentsList, propertiesList] = await Promise.all([getAgents(), getProperties()]);
-  const listingsByAgent = new Map<string, number>();
-  for (const p of propertiesList) {
-    if (p.agentId) listingsByAgent.set(p.agentId, (listingsByAgent.get(p.agentId) ?? 0) + 1);
-  }
+  const [agentsList, listingsByAgent] = await Promise.all([getAgents(), getListingCountsByAgent()]);
   const agents = agentsList.map((a) => ({
     ...a,
-    listingsCount: listingsByAgent.get(a.id) ?? 0,
+    listingsCount: listingsByAgent[a.id] ?? 0,
   }));
   const leader = agents.find((a) => a.featured);
   const avgRating = agents.length

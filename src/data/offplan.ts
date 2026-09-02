@@ -3,6 +3,13 @@ import { unstable_cache } from "next/cache";
 import { supabasePublic } from "@/lib/supabase/public";
 import type { OffPlanProject, OffPlanStatus } from "./types";
 
+// Admin saves invalidate this tag instantly via /api/revalidate, so this
+// time-based window is only a safety net (matches the page-level
+// `revalidate = 3600` safety net on routes that read off-plan data) — it
+// was previously 300s, causing needless cache rewrites (billed as ISR/Data
+// Cache writes) between admin edits.
+const DATA_CACHE_REVALIDATE = 3600;
+
 interface OffPlanProjectRow {
   id: string;
   slug: string;
@@ -64,7 +71,7 @@ async function fetchOffPlanProjects(): Promise<OffPlanProject[]> {
   return (data ?? []).map(mapOffPlanProject);
 }
 export const getOffPlanProjects = unstable_cache(fetchOffPlanProjects, ["offplan:all"], {
-  revalidate: 300,
+  revalidate: DATA_CACHE_REVALIDATE,
   tags: ["off-plan"],
 });
 
@@ -78,7 +85,7 @@ async function fetchOffPlanProjectBySlug(slug: string): Promise<OffPlanProject |
   return data ? mapOffPlanProject(data) : undefined;
 }
 export const getOffPlanProjectBySlug = unstable_cache(fetchOffPlanProjectBySlug, ["offplan:bySlug"], {
-  revalidate: 300,
+  revalidate: DATA_CACHE_REVALIDATE,
   tags: ["off-plan"],
 });
 
@@ -92,6 +99,6 @@ async function fetchFeaturedOffPlanProjects(): Promise<OffPlanProject[]> {
   return (data ?? []).map(mapOffPlanProject);
 }
 export const getFeaturedOffPlanProjects = unstable_cache(fetchFeaturedOffPlanProjects, ["offplan:featured"], {
-  revalidate: 300,
+  revalidate: DATA_CACHE_REVALIDATE,
   tags: ["off-plan"],
 });
