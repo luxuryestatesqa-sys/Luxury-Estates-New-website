@@ -21,3 +21,18 @@ export function breadcrumbJsonLd(items: { name: string; url: string }[]) {
     })),
   };
 }
+
+// Powers the FAQ rich-result snippet in Google search — surfaces individual
+// Q&As directly on the results page, which is extra SERP real estate for
+// long-tail question queries that page copy alone won't rank for.
+export function faqJsonLd(items: { q: string; a: string }[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: items.map((item) => ({
+      "@type": "Question",
+      name: item.q,
+      acceptedAnswer: { "@type": "Answer", text: item.a },
+    })),
+  };
+}

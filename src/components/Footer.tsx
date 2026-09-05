@@ -9,6 +9,7 @@ const discoverLinks = [
   { href: "/properties", label: "Qatar's Areas" },
   { href: "/huzoom-lands-for-sale", label: "Huzoom Lusail — Land for Sale" },
   { href: "/qatar-apartment-finder", label: "Lease-to-Own Apartments — Lusail & The Pearl" },
+  { href: "/lusail-marina-office-finder", label: "Lease-to-Own Offices — Lusail & Marina District" },
   { href: "/contact", label: "Off-Market" },
   { href: "/blog", label: "Blog" },
 ];
