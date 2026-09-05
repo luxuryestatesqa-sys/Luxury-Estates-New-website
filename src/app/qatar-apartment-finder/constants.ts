@@ -24,17 +24,17 @@ export const BEDROOM_OPTIONS = ["Studio", "1 Bedroom", "2 Bedroom", "3+ Bedroom"
 export const BEDROOM_OPTIONS_AR = ["استوديو", "غرفة نوم واحدة", "غرفتا نوم", "3+ غرف نوم"] as const;
 
 export const DOWN_PAYMENT_OPTIONS = [
-  "QAR 50,000",
-  "QAR 50,000 – 100,000",
+  "QAR 100,000",
   "QAR 100,000 – 200,000",
-  "QAR 200,000+",
+  "QAR 200,000 – 400,000",
+  "QAR 400,000+",
 ] as const;
 
 export const DOWN_PAYMENT_OPTIONS_AR = [
-  "50,000 ريال قطري",
-  "50,000 – 100,000 ريال قطري",
+  "100,000 ريال قطري",
   "100,000 – 200,000 ريال قطري",
-  "200,000+ ريال قطري",
+  "200,000 – 400,000 ريال قطري",
+  "400,000+ ريال قطري",
 ] as const;
 
 export const MONTHLY_INSTALLMENT_OPTIONS = [

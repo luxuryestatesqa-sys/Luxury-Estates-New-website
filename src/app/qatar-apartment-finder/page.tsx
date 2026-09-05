@@ -94,13 +94,13 @@ const LIMITED_DEAL = {
   title: "2BHK Ready to Move-In, Lusail",
   points: [
     "Lease-to-Own — build equity from day one",
-    "2% down payment only",
+    "4% down payment only",
     "QAR 12,000 / month installment",
     "6-year payment plan",
     "Ready to move in now",
   ],
   message:
-    "Hi, I'm interested in the 2BHK Ready-to-Move-In unit in Lusail — 2% down, QAR 12,000/month, 6-year plan. Is it still available?",
+    "Hi, I'm interested in the 2BHK Ready-to-Move-In unit in Lusail — 4% down, QAR 12,000/month, 6-year plan. Is it still available?",
 };
 
 const OWNERSHIP_PATHS = [
